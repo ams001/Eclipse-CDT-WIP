@@ -42,6 +42,7 @@ import org.eclipse.ui.texteditor.IUpdate;
 
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.ISourceReference;
+import org.eclipse.cdt.ui.refactoring.actions.GenerateConstructorUsingFieldsAction;
 import org.eclipse.cdt.ui.refactoring.actions.GettersAndSettersAction;
 import org.eclipse.cdt.ui.refactoring.actions.ImplementMethodAction;
 import org.eclipse.cdt.ui.refactoring.actions.RefactoringAction;
@@ -122,7 +123,7 @@ public class GenerateActionGroup extends ActionGroup implements ISelectionChange
 	private ImplementMethodAction fImplementMethod;
 //	private AddDelegateMethodsAction fAddDelegateMethods;
 //	private AddUnimplementedConstructorsAction fAddUnimplementedConstructors;
-//	private GenerateNewConstructorUsingFieldsAction fGenerateConstructorUsingFields;
+	private GenerateConstructorUsingFieldsAction fGenerateContructorUsingFields;
 //	private AddJavaDocStubAction fAddCppDocStub;
 	private AddBookmarkAction fAddBookmark;
 	private AddTaskAction fAddTaskAction;
@@ -196,10 +197,10 @@ public class GenerateActionGroup extends ActionGroup implements ISelectionChange
 //		fAddUnimplementedConstructors.setActionDefinitionId(ICEditorActionDefinitionIds.ADD_UNIMPLEMENTED_CONSTRUCTORS);
 //		editor.setAction("AddUnimplementedConstructors", fAddUnimplementedConstructors); //$NON-NLS-1$		
 //
-//		fGenerateConstructorUsingFields= new GenerateNewConstructorUsingFieldsAction(editor);
-//		fGenerateConstructorUsingFields.setActionDefinitionId(ICEditorActionDefinitionIds.GENERATE_CONSTRUCTOR_USING_FIELDS);
-//		editor.setAction("GenerateConstructorUsingFields", fGenerateConstructorUsingFields); //$NON-NLS-1$
-//
+		fGenerateContructorUsingFields= new GenerateConstructorUsingFieldsAction(editor);
+		fGenerateContructorUsingFields.setActionDefinitionId(ICEditorActionDefinitionIds.GENERATE_CONTRUCTOR_USING_FIELDS);
+		editor.setAction("org.eclipse.cdt.ui.refactor.generate.constructor.using.fields", fGenerateContructorUsingFields); //$NON-NLS-1$
+		
 //		fHashCodeEquals= new GenerateHashCodeEqualsAction(editor);
 //		fHashCodeEquals.setActionDefinitionId(ICEditorActionDefinitionIds.GENERATE_HASHCODE_EQUALS);
 //		editor.setAction("GenerateHashCodeEquals", fHashCodeEquals); //$NON-NLS-1$
@@ -279,10 +280,12 @@ public class GenerateActionGroup extends ActionGroup implements ISelectionChange
 //
 //		fAddUnimplementedConstructors= new AddUnimplementedConstructorsAction(site);
 //		fAddUnimplementedConstructors.setActionDefinitionId(ICEditorActionDefinitionIds.ADD_UNIMPLEMENTED_CONSTRUCTORS);
-//		
-//		fGenerateConstructorUsingFields= new GenerateNewConstructorUsingFieldsAction(site);
-//		fGenerateConstructorUsingFields.setActionDefinitionId(ICEditorActionDefinitionIds.GENERATE_CONSTRUCTOR_USING_FIELDS);
-//
+
+		fGenerateContructorUsingFields= new GenerateConstructorUsingFieldsAction();
+		fGenerateContructorUsingFields.setActionDefinitionId(ICEditorActionDefinitionIds.GENERATE_CONTRUCTOR_USING_FIELDS);
+		fGenerateContructorUsingFields.setSite(fSite);
+		fRefactorActions.add(fGenerateContructorUsingFields);
+		
 //		fHashCodeEquals= new GenerateHashCodeEqualsAction(site);
 //		fHashCodeEquals.setActionDefinitionId(ICEditorActionDefinitionIds.GENERATE_HASHCODE_EQUALS);
 //
@@ -442,7 +445,7 @@ public class GenerateActionGroup extends ActionGroup implements ISelectionChange
 		added+= addAction(source, fImplementMethod);
 //		added+= addAction(source, fAddDelegateMethods);
 //		added+= addAction(source, fHashCodeEquals);
-//		added+= addAction(source, fGenerateConstructorUsingFields);
+		added+= addAction(source, fGenerateContructorUsingFields);
 //		added+= addAction(source, fAddUnimplementedConstructors);
 		source.add(new Separator(GROUP_CODE));
 		source.add(new Separator(GROUP_EXTERNALIZE));
@@ -467,7 +470,7 @@ public class GenerateActionGroup extends ActionGroup implements ISelectionChange
 		added+= addAction(source, fImplementMethod);
 //		added+= addAction(source, fAddDelegateMethods);
 //		added+= addAction(source, fHashCodeEquals);
-//		added+= addAction(source, fGenerateConstructorUsingFields);
+		added+= addAction(source, fGenerateContructorUsingFields);
 //		added+= addAction(source, fAddUnimplementedConstructors);
 		source.add(new Separator(GROUP_CODE));
 		source.add(new Separator(GROUP_EXTERNALIZE));
@@ -502,7 +505,7 @@ public class GenerateActionGroup extends ActionGroup implements ISelectionChange
 		actionBar.setGlobalActionHandler(CdtActionConstants.IMPLEMENT_METHOD, fImplementMethod);
 //		actionBar.setGlobalActionHandler(CdtActionConstants.GENERATE_DELEGATE_METHODS, fAddDelegateMethods);
 //		actionBar.setGlobalActionHandler(CdtActionConstants.ADD_CONSTRUCTOR_FROM_SUPERCLASS, fAddUnimplementedConstructors);
-//		actionBar.setGlobalActionHandler(CdtActionConstants.GENERATE_CONSTRUCTOR_USING_FIELDS, fGenerateConstructorUsingFields);
+		actionBar.setGlobalActionHandler(CdtActionConstants.GENERATE_CONSTRUCTOR_USING_FIELDS, fGenerateContructorUsingFields);
 //		actionBar.setGlobalActionHandler(CdtActionConstants.GENERATE_HASHCODE_EQUALS, fHashCodeEquals);
 //		actionBar.setGlobalActionHandler(CdtActionConstants.ADD_CPP_DOC_COMMENT, fAddCppDocStub);
 //		actionBar.setGlobalActionHandler(CdtActionConstants.EXTERNALIZE_STRINGS, fExternalizeStrings);
