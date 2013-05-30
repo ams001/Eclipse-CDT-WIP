@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Marc-Andre Laperle and others.
+ * Copyright (c) 2010, 2013 Marc-Andre Laperle, Ericsson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Marc-Andre Laperle - Initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.cdt.internal.ui.refactoring.generateconstructor.usingfields;
 
@@ -135,13 +136,10 @@ public class GenerateConstructorUsingFieldsInputPage extends UserInputWizardPage
 	
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
-				ArrayList<GenerateConstructorInsertEditProvider> selectedFields = context.selectedFields;
 				for (Object currentElement : variableSelectionView.getCheckedElements()) {
 					if (currentElement instanceof GenerateConstructorInsertEditProvider) {
-						if(!selectedFields.contains(currentElement)) {
-							GenerateConstructorInsertEditProvider editProvider = (GenerateConstructorInsertEditProvider) currentElement;
-							selectedFields.add(editProvider);
-						}
+						GenerateConstructorInsertEditProvider editProvider = (GenerateConstructorInsertEditProvider) currentElement;
+						editProvider.setSelected(event.getChecked());
 					}
 				}
 			}
@@ -175,9 +173,11 @@ public class GenerateConstructorUsingFieldsInputPage extends UserInputWizardPage
 				Object[] items = context.getElements(null);
 				for (Object treeItem : items) {
 					variableSelectionView.setChecked(treeItem, true);
+					if (treeItem instanceof GenerateConstructorInsertEditProvider) {
+						GenerateConstructorInsertEditProvider generateConstructorInsertEditProvider = (GenerateConstructorInsertEditProvider) treeItem;
+						generateConstructorInsertEditProvider.setSelected(true);
+					}
 				}
-				context.selectedFields.clear();
-				context.selectedFields.addAll(context.existingFields);
 			}
 		});
 		
@@ -189,8 +189,11 @@ public class GenerateConstructorUsingFieldsInputPage extends UserInputWizardPage
 				Object[] items = context.getElements(null);
 				for (Object treeItem : items) {
 					variableSelectionView.setChecked(treeItem, false);
+					if (treeItem instanceof GenerateConstructorInsertEditProvider) {
+						GenerateConstructorInsertEditProvider generateConstructorInsertEditProvider = (GenerateConstructorInsertEditProvider) treeItem;
+						generateConstructorInsertEditProvider.setSelected(false);
+					}
 				}
-				context.selectedFields.clear();
 			}
 		});
 		
@@ -280,10 +283,10 @@ public class GenerateConstructorUsingFieldsInputPage extends UserInputWizardPage
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					ICPPConstructor selectedConstructor = (ICPPConstructor) combo.getData(combo.getItem(combo.getSelectionIndex()));
-					context.selectedbaseClassesConstrutors.put(baseSpecifier, selectedConstructor);
+					context.baseClassToSelectedConstrutor.put(baseSpecifier, selectedConstructor);
 				}
 			});
-			ArrayList<ICPPConstructor> constructors = context.baseClassesConstrutors.get(baseSpecifier);
+			ArrayList<ICPPConstructor> constructors = context.baseClassToConstrutors.get(baseSpecifier);
 			for(int i = 0; i < constructors.size(); i++) {
 				ICPPConstructor constructor = constructors.get(i);
 				String constructorString = constructor.toString();
@@ -291,7 +294,7 @@ public class GenerateConstructorUsingFieldsInputPage extends UserInputWizardPage
 				combo.setData(constructorString, constructor);
 				if(constructorString.endsWith("()")) { //$NON-NLS-1$
 					combo.select(i + 1);
-					context.selectedbaseClassesConstrutors.put(baseSpecifier, constructor);
+					context.baseClassToSelectedConstrutor.put(baseSpecifier, constructor);
 				}
 			}
 			combo.pack();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Marc-Andre Laperle and others.
+ * Copyright (c) 2010, 2013 Marc-Andre Laperle, Ericsson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Marc-Andre Laperle - Initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.cdt.internal.ui.refactoring.generateconstructor.usingfields;
 
@@ -116,7 +117,7 @@ public class FunctionFactory {
 		
 		// Base classes
 		for (ICPPASTBaseSpecifier baseClass : context.baseClasses) {
-			ICPPConstructor baseConstructor = context.selectedbaseClassesConstrutors.get(baseClass);
+			ICPPConstructor baseConstructor = context.baseClassToSelectedConstrutor.get(baseClass);
 			if (baseConstructor != null) {
 					CPPASTConstructorChainInitializer chainInit = new CPPASTConstructorChainInitializer();
 					chainInit.setMemberInitializerId(baseClass.getName().copy());
@@ -203,7 +204,7 @@ public class FunctionFactory {
 		
 		//Base constructor params
 		for (ICPPASTBaseSpecifier baseClass : context.baseClasses) {
-			ICPPConstructor baseConstructor = context.selectedbaseClassesConstrutors.get(baseClass);
+			ICPPConstructor baseConstructor = context.baseClassToSelectedConstrutor.get(baseClass);
 			if (baseConstructor != null) {
 					for (ICPPParameter baseConstrutorParam : baseConstructor.getParameters()) {
 						CPPParameter paramTest = (CPPParameter) baseConstrutorParam;
