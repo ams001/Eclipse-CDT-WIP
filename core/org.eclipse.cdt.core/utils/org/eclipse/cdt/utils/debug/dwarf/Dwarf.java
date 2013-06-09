@@ -166,6 +166,7 @@ public class Dwarf {
 	Map<Integer, Map<Long, AbbreviationEntry>> abbreviationMaps = new HashMap<Integer, Map<Long, AbbreviationEntry>>();
 
 	boolean isLE;
+	boolean is64;
 
 	CompileUnit currentCU;
 
@@ -450,7 +451,7 @@ public class Dwarf {
 						list.add(new AttributeValue(attr, obj));
 					}
 				} catch (IOException e) {
-					//break;
+					e.printStackTrace();
 				}
 				processDebugInfoEntry(requestor, entry, list);
 			}
@@ -591,6 +592,15 @@ public class Dwarf {
 					int f = (int) read_unsigned_leb128(in);
 					return readAttribute(f, in, header);
 				}
+			case DwarfConstants.DW_FORM_sec_offset :
+			{
+				if (is64) {
+					obj = new Long(read_8_bytes(in));
+				} else {
+					obj = new Long(read_4_bytes(in));
+				}
+				break;
+			}
 
 			default :
 				break;

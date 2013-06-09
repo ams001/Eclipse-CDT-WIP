@@ -71,6 +71,7 @@ public class DwarfReader extends Dwarf implements ISymbolReader {
 	public void init(Elf exe) throws IOException {
 		Elf.ELFhdr header = exe.getELFhdr();
 		isLE = header.e_ident[Elf.ELFhdr.EI_DATA] == Elf.ELFhdr.ELFDATA2LSB;
+		is64 = header.e_ident[Elf.ELFhdr.EI_CLASS] == Elf.ELFhdr.ELFCLASS64;
 
 		Elf.Section[] sections = exe.getSections();
 		
