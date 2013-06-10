@@ -31,7 +31,7 @@ public class GenerateConstructorUsingFieldsContext implements ITreeContentProvid
 	public ArrayList<GenerateConstructorInsertEditProvider> treeFields = new ArrayList<GenerateConstructorInsertEditProvider>();
 	ArrayList<GenerateConstructorInsertEditProvider> existingFields = new ArrayList<GenerateConstructorInsertEditProvider>();
 
-	private boolean separateDefinition = false;
+	private boolean definitionSeparate = false;
 	
 	/* Declaration options */
 	
@@ -88,12 +88,12 @@ public class GenerateConstructorUsingFieldsContext implements ITreeContentProvid
 		return selectedFieldsInOrder;
 	}
 
-	public void setSeparateDefinition(boolean implementationInHeader) {
-		this.separateDefinition = implementationInHeader;
+	public void setDefinitionSeparate(boolean definitionSeparate) {
+		this.definitionSeparate = definitionSeparate;
 	}
 
 	public boolean isSeparateDefinition() {
-		return separateDefinition;
+		return definitionSeparate;
 	}
 
 	public boolean isInitializeOtherMembers() {
@@ -102,6 +102,14 @@ public class GenerateConstructorUsingFieldsContext implements ITreeContentProvid
 
 	public void setInitializeOtherMembers(boolean initializeOtherMembers) {
 		this.initializeOtherMembers = initializeOtherMembers;
+	}
+
+	public void selectField(String name) {
+		for(GenerateConstructorInsertEditProvider treeField : treeFields) {
+			if (name.equals(String.valueOf(treeField.getFieldDeclarator().getName().getSimpleID()))) {
+				treeField.setSelected(true);
+			}
+		}
 	}
 
 }
