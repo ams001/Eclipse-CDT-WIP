@@ -14,6 +14,7 @@ package org.eclipse.cdt.internal.ui.refactoring.utils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
+import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTDeclSpecifier;
 import org.eclipse.cdt.core.dom.ast.IASTName;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
@@ -61,6 +62,36 @@ public class NamespaceHelper {
 					return super.visit(declSpec);
 				}
 		
+			@Override
+			public int visit(ICPPASTNamespaceDefinition namespace) {
+				if (checkFileNameAndLocation(translationUnit.getLocation(), offset, namespace)) {
+					qualifiedName.addName((namespace).getName().copy(CopyStyle.withLocations)); 
+				}
+				
+				return super.visit(namespace);
+			}
+		});
+		
+		return qualifiedName;
+	}
+	
+	/**
+	 * Returns the qualified name of all namespaces that are defined at the specified translation unit and offset.
+	 * 
+	 * @param translationUnit
+	 * @param offset
+	 * @param astCache
+	 * @return ICPPASTQualifiedName with the names of all namespaces
+	 * @throws CoreException 
+	 */
+	public static ICPPASTQualifiedName getSurroundingNamespacesOnly(final ITranslationUnit translationUnit, final int offset, CRefactoringContext astCache)
+			throws CoreException {
+		final CPPASTQualifiedName qualifiedName = new CPPASTQualifiedName();
+	
+		astCache.getAST(translationUnit, null).accept(new ASTVisitor() {
+			{
+				shouldVisitNamespaces = true;
+			}
 			@Override
 			public int visit(ICPPASTNamespaceDefinition namespace) {
 				if (checkFileNameAndLocation(translationUnit.getLocation(), offset, namespace)) {

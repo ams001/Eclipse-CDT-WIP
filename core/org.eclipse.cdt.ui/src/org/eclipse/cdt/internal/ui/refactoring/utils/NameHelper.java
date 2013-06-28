@@ -68,13 +68,13 @@ public class NameHelper {
 	 */
 	public static ICPPASTQualifiedName createQualifiedNameFor(IASTName declaratorName,
 			ITranslationUnit declarationTu, int selectionOffset, ITranslationUnit insertFileTu,
-			int insertLocation, CRefactoringContext astCache) throws CoreException {
+			int insertLocation, CRefactoringContext refactoringContext) throws CoreException {
 		ICPPASTQualifiedName qname = new CPPASTQualifiedName();
 		
 		IASTName[] declarationNames = NamespaceHelper.getSurroundingNamespace(declarationTu,
-				selectionOffset, astCache).getNames();
+				selectionOffset, refactoringContext).getNames();
 		IASTName[] implementationNames = NamespaceHelper.getSurroundingNamespace(insertFileTu,
-				insertLocation, astCache).getNames();
+				insertLocation, refactoringContext).getNames();
 		
 		for (int i = 0; i < declarationNames.length; i++) {
 			if (i >= implementationNames.length) {

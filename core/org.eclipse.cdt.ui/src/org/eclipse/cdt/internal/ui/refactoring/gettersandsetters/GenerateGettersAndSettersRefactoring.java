@@ -39,6 +39,7 @@ import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTSimpleDeclaration;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCompositeTypeSpecifier;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTQualifiedName;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.ICProject;
@@ -55,6 +56,7 @@ import org.eclipse.cdt.internal.ui.refactoring.implementmethod.InsertLocation;
 import org.eclipse.cdt.internal.ui.refactoring.implementmethod.MethodDefinitionInsertLocationFinder;
 import org.eclipse.cdt.internal.ui.refactoring.utils.Checks;
 import org.eclipse.cdt.internal.ui.refactoring.utils.NameHelper;
+import org.eclipse.cdt.internal.ui.refactoring.utils.NamespaceHelper;
 import org.eclipse.cdt.internal.ui.refactoring.utils.NodeHelper;
 import org.eclipse.cdt.internal.ui.refactoring.utils.VisibilityEnum;
 
@@ -65,12 +67,12 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 
 	private final class CompositeTypeSpecFinder extends ASTVisitor {
 		private final int start;
-		private final Container<IASTCompositeTypeSpecifier> container;
+		private final Container<ICPPASTCompositeTypeSpecifier> container;
 		{
 			shouldVisitDeclSpecifiers = true;
 		}
 
-		private CompositeTypeSpecFinder(int start, Container<IASTCompositeTypeSpecifier> container) {
+		private CompositeTypeSpecFinder(int start, Container<ICPPASTCompositeTypeSpecifier> container) {
 			this.start = start;
 			this.container = container;
 		}
@@ -80,7 +82,7 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 			if (declSpec instanceof IASTCompositeTypeSpecifier) {
 				IASTFileLocation loc = declSpec.getFileLocation();
 				if (start > loc.getNodeOffset() && start < loc.getNodeOffset() + loc.getNodeLength()) {
-					container.setObject((IASTCompositeTypeSpecifier) declSpec);
+					container.setObject((ICPPASTCompositeTypeSpecifier) declSpec);
 					return ASTVisitor.PROCESS_ABORT;
 				}
 			}
@@ -90,7 +92,8 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 	}
 
 	private final GetterSetterContext context;
-	private InsertLocation definitionInsertLocation;	
+	private InsertLocation definitionInsertLocation;
+	private ICPPASTCompositeTypeSpecifier fCompositeTypeSpecifier;	
 	
 	public GenerateGettersAndSettersRefactoring(ICElement element, ISelection selection,
 			ICProject project) {
@@ -150,33 +153,34 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 	private void initRefactoring(IProgressMonitor pm) throws OperationCanceledException, CoreException {
 		IASTTranslationUnit ast = getAST(tu, null);
 		context.selectedName = getSelectedName(ast);
-		IASTCompositeTypeSpecifier compositeTypeSpecifier = null;
+		fCompositeTypeSpecifier = null;
 		if (context.selectedName != null) {
-			compositeTypeSpecifier = getCompositeTypeSpecifier(context.selectedName);
+			fCompositeTypeSpecifier = getCompositeTypeSpecifier(context.selectedName);
 		} else {
-			compositeTypeSpecifier = findCurrentCompositeTypeSpecifier(ast);
+			fCompositeTypeSpecifier = findCurrentCompositeTypeSpecifier(ast);
 		}
-		if (compositeTypeSpecifier != null) {
-			findDeclarations(compositeTypeSpecifier);
+		if (fCompositeTypeSpecifier != null) {
+			
+			findDeclarations(fCompositeTypeSpecifier);
 		} else {
 			initStatus.addFatalError(Messages.GenerateGettersAndSettersRefactoring_NoClassDefFound);
 		}
 	}
 	
-	private IASTCompositeTypeSpecifier findCurrentCompositeTypeSpecifier(IASTTranslationUnit ast)
+	private ICPPASTCompositeTypeSpecifier findCurrentCompositeTypeSpecifier(IASTTranslationUnit ast)
 			throws OperationCanceledException, CoreException {
 		final int start = selectedRegion.getOffset();
-		Container<IASTCompositeTypeSpecifier> container = new Container<IASTCompositeTypeSpecifier>();
+		Container<ICPPASTCompositeTypeSpecifier> container = new Container<ICPPASTCompositeTypeSpecifier>();
 		ast.accept(new CompositeTypeSpecFinder(start, container));
 		return container.getObject();
 	}
 
-	private IASTCompositeTypeSpecifier getCompositeTypeSpecifier(IASTName selectedName) {
+	private ICPPASTCompositeTypeSpecifier getCompositeTypeSpecifier(IASTName selectedName) {
 		IASTNode node = selectedName;
-		while (node != null && !(node instanceof IASTCompositeTypeSpecifier)) {
+		while (node != null && !(node instanceof ICPPASTCompositeTypeSpecifier)) {
 			node = node.getParent();
 		}
-		return (IASTCompositeTypeSpecifier) node;
+		return (ICPPASTCompositeTypeSpecifier) node;
 	}
 
 	private IASTName getSelectedName(IASTTranslationUnit ast) {
@@ -226,14 +230,13 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 			throws CoreException, OperationCanceledException {
 		List<IASTNode> getterAndSetters = new ArrayList<IASTNode>();
 		List<IASTFunctionDefinition> definitions = new ArrayList<IASTFunctionDefinition>();
-		ICPPASTCompositeTypeSpecifier classDefinition =
-				CPPVisitor.findAncestorWithType(context.existingFields.get(0), ICPPASTCompositeTypeSpecifier.class);
+		findDefinitionInsertLocation(pm);
 		for (AccessorDescriptor accessor : context.selectedAccessors) {
 			IASTName accessorName = new CPPASTName(accessor.toString().toCharArray());
 			if (context.isDefinitionSeparate()) {
 				getterAndSetters.add(accessor.getAccessorDeclaration());
 				IASTName declaratorName =  NameHelper.createQualifiedNameFor(
-						accessorName, classDefinition.getTranslationUnit().getOriginatingTranslationUnit(), classDefinition.getFileLocation().getNodeOffset(),
+						accessorName, fCompositeTypeSpecifier.getTranslationUnit().getOriginatingTranslationUnit(), fCompositeTypeSpecifier.getFileLocation().getNodeOffset(),
 						definitionInsertLocation.getTranslationUnit(), definitionInsertLocation.getInsertPosition(), refactoringContext);
 				IASTFunctionDefinition functionDefinition = accessor.getAccessorDefinition(declaratorName);
 				// Standalone definitions in a header file have to be declared inline. 
@@ -249,7 +252,7 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 			addDefinition(collector, definitions, pm);
 		}
 
-		ClassMemberInserter.createChange(classDefinition, VisibilityEnum.v_public,
+		ClassMemberInserter.createChange(fCompositeTypeSpecifier, VisibilityEnum.v_public,
 				getterAndSetters, false, collector);
 	}
 
@@ -276,11 +279,14 @@ public class GenerateGettersAndSettersRefactoring extends CRefactoring {
 			return;
 		}
 		
+		ICPPASTQualifiedName desiredNamespace = NamespaceHelper.getSurroundingNamespacesOnly(tu, fCompositeTypeSpecifier.getFileLocation().getNodeOffset(), refactoringContext);
+		
 		IASTSimpleDeclaration decl =
 				CPPVisitor.findAncestorWithType(context.existingFields.get(0), IASTSimpleDeclaration.class);
 		MethodDefinitionInsertLocationFinder locationFinder = new MethodDefinitionInsertLocationFinder();
 		InsertLocation location = locationFinder.find(tu, decl.getFileLocation(), decl.getParent(),
-				refactoringContext, pm);
+				refactoringContext, desiredNamespace, pm);
+		int insertPosition = location.getInsertPosition();
 
 		if (location.getFile() == null || NodeHelper.isContainedInTemplateDeclaration(decl)) {
 			location.setNodeToInsertAfter(NodeHelper.findTopLevelParent(decl), tu);

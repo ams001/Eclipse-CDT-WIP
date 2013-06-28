@@ -61,6 +61,9 @@ public class InsertLocation {
 		} else if (nodeToInsertAfter != null) {
 			IASTFileLocation fileLocation = nodeToInsertAfter.getFileLocation();
 			return fileLocation.getNodeOffset() + fileLocation.getNodeLength();
+		} else if (parentNode != null) {
+			IASTFileLocation fileLocation = parentNode.getFileLocation();
+			return fileLocation.getNodeOffset() + fileLocation.getNodeLength() / 2;
 		}
 		return 0;
 	}

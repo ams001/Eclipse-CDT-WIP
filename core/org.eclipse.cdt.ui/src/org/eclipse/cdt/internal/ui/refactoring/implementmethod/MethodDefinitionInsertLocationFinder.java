@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
+import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTDeclaration;
 import org.eclipse.cdt.core.dom.ast.IASTFileLocation;
 import org.eclipse.cdt.core.dom.ast.IASTFunctionDeclarator;
@@ -30,6 +31,9 @@ import org.eclipse.cdt.core.dom.ast.IASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.IASTName;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTSimpleDeclaration;
+import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTNamespaceDefinition;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTQualifiedName;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTTemplateDeclaration;
 import org.eclipse.cdt.core.model.ITranslationUnit;
 
@@ -53,9 +57,9 @@ public class MethodDefinitionInsertLocationFinder {
 			new HashMap<IASTSimpleDeclaration, IASTName>();
 
 	public InsertLocation find(ITranslationUnit declarationTu, IASTFileLocation methodDeclarationLocation,
-			IASTNode parent, CRefactoringContext refactoringContext, IProgressMonitor pm) throws CoreException {
+			IASTNode parent, CRefactoringContext refactoringContext, final ICPPASTQualifiedName desiredNamespace, IProgressMonitor pm) throws CoreException {
 		IASTDeclaration[] declarations = NodeHelper.getDeclarations(parent);
-		InsertLocation insertLocation = new InsertLocation();
+		final InsertLocation insertLocation = new InsertLocation();
 
 		Collection<IASTSimpleDeclaration> allPreviousSimpleDeclarationsFromClassInReverseOrder =
 				getAllPreviousSimpleDeclarationsFromClassInReverseOrder(declarations, methodDeclarationLocation, pm);
@@ -105,13 +109,37 @@ public class MethodDefinitionInsertLocationFinder {
 						definition.getTranslationUnit().getOriginatingTranslationUnit());
 			}
 		}
+		
+		final IASTName lastName = desiredNamespace.getLastName();
 
 		if (insertLocation.getTranslationUnit() == null) {
 			if (declarationTu.isHeaderUnit()) {
-				ITranslationUnit partner = SourceHeaderPartnerFinder.getPartnerTranslationUnit(
+				final ITranslationUnit partner = SourceHeaderPartnerFinder.getPartnerTranslationUnit(
 						declarationTu, refactoringContext);
 				if (partner != null) {
-					insertLocation.setParentNode(refactoringContext.getAST(partner, null), partner);
+					IASTTranslationUnit partnerAst = refactoringContext.getAST(partner, null);
+					// Try to insert in the desired namespace, if found
+					partnerAst.accept(new ASTVisitor() {
+						{
+							shouldVisitNamespaces = true;
+						}
+
+						@Override
+						public int visit(ICPPASTNamespaceDefinition namespaceDefinition) {
+							
+							if (namespaceDefinition.getName().toString().equals(lastName.toString())) {
+								insertLocation.setParentNode(namespaceDefinition, partner);
+								return ASTVisitor.PROCESS_ABORT;
+							}
+							
+							return super.visit(namespaceDefinition);
+						}
+
+					});
+					
+					if (insertLocation.getTranslationUnit() == null) {
+						insertLocation.setParentNode(partnerAst, partner);
+					}
 				}
 			} else {
 				insertLocation.setParentNode(parent.getTranslationUnit(), declarationTu);

@@ -38,11 +38,11 @@ import org.eclipse.cdt.core.dom.ast.IASTFunctionDeclarator;
 import org.eclipse.cdt.core.dom.ast.IASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.IASTName;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
-import org.eclipse.cdt.core.dom.ast.IASTTypeId;
 import org.eclipse.cdt.core.dom.ast.IASTNode.CopyStyle;
 import org.eclipse.cdt.core.dom.ast.IASTPointerOperator;
 import org.eclipse.cdt.core.dom.ast.IASTSimpleDeclaration;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
+import org.eclipse.cdt.core.dom.ast.IASTTypeId;
 import org.eclipse.cdt.core.dom.ast.IBinding;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTDeclSpecifier;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDeclarator;
@@ -64,6 +64,7 @@ import org.eclipse.cdt.internal.ui.refactoring.ModificationCollector;
 import org.eclipse.cdt.internal.ui.refactoring.utils.Checks;
 import org.eclipse.cdt.internal.ui.refactoring.utils.DefinitionFinder;
 import org.eclipse.cdt.internal.ui.refactoring.utils.NameHelper;
+import org.eclipse.cdt.internal.ui.refactoring.utils.NamespaceHelper;
 import org.eclipse.cdt.internal.ui.refactoring.utils.NodeHelper;
 import org.eclipse.cdt.internal.ui.refactoring.utils.SelectionHelper;
 
@@ -230,9 +231,10 @@ public class ImplementMethodRefactoring extends CRefactoring {
 		if (insertLocations.containsKey(methodDeclaration)) {
 			return insertLocations.get(methodDeclaration);
 		}
+		ICPPASTQualifiedName desiredNamespace = NamespaceHelper.getSurroundingNamespacesOnly(tu, methodDeclaration.getFileLocation().getNodeOffset(), refactoringContext);
 		InsertLocation insertLocation =
 				methodDefinitionInsertLocationFinder.find(tu, methodDeclaration.getFileLocation(),
-						methodDeclaration.getParent(), refactoringContext, subMonitor);
+						methodDeclaration.getParent(), refactoringContext, desiredNamespace, subMonitor);
 		
 		if (insertLocation.getTranslationUnit() == null || NodeHelper.isContainedInTemplateDeclaration(methodDeclaration)) {
 			insertLocation.setNodeToInsertAfter(NodeHelper.findTopLevelParent(methodDeclaration), tu);
