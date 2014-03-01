@@ -96,6 +96,13 @@ public class MIVar {
     public String getValue() {
         return value;
     }
+    
+    /**
+     * @since 4.6
+	 */
+    public void setType(String newType) {
+        type = newType;
+    }
 
 	/**
 	 * @return Whether the value and children of this variable are provided

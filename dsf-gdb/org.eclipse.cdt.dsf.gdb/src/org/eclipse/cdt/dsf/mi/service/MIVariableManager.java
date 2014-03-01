@@ -14,9 +14,13 @@
  *     Jens Elmenthaler (Verigy) - Added Full GDB pretty-printing support (bug 302121)
  *     Axel Mueller - Workaround for GDB bug where -var-info-path-expression gives invalid result (Bug 320277)
  *     Anton Gorenkov - DSF-GDB should properly handle variable type change (based on RTTI) (Bug 376901)
+<<<<<<< HEAD
  *     Anders Dahlberg (Ericsson)  - Need additional API to extend support for memory spaces (Bug 431627)
  *     Alvaro Sanchez-Leon (Ericsson)  - Need additional API to extend support for memory spaces (Bug 431627)
  *     Martin Schreiber - Bug 435606 - write unsigned variables (UINT32 and UINT64) in the binary format
+=======
+ *     Marc-Andre Laperle (Ericsson) - Bug 293832 Handle typedefs to pointer types
+>>>>>>> 9c94a05... Bug 293832 - [variables][cdi] wrong display of variable values with GDB
  *******************************************************************************/
 package org.eclipse.cdt.dsf.mi.service;
 
@@ -43,6 +47,7 @@ import org.eclipse.cdt.dsf.debug.service.IFormattedValues.FormattedValueDMContex
 import org.eclipse.cdt.dsf.debug.service.IFormattedValues.FormattedValueDMData;
 import org.eclipse.cdt.dsf.debug.service.IMemory.IMemoryChangedEvent;
 import org.eclipse.cdt.dsf.debug.service.IRunControl;
+import org.eclipse.cdt.dsf.debug.service.IRunControl.IContainerDMContext;
 import org.eclipse.cdt.dsf.debug.service.IRunControl.IExecutionDMContext;
 import org.eclipse.cdt.dsf.debug.service.IStack;
 import org.eclipse.cdt.dsf.debug.service.IStack.IFrameDMContext;
@@ -66,6 +71,7 @@ import org.eclipse.cdt.dsf.mi.service.command.commands.ExprMetaGetChildren;
 import org.eclipse.cdt.dsf.mi.service.command.commands.ExprMetaGetValue;
 import org.eclipse.cdt.dsf.mi.service.command.commands.ExprMetaGetVar;
 import org.eclipse.cdt.dsf.mi.service.command.commands.MIDataEvaluateExpression;
+import org.eclipse.cdt.dsf.mi.service.command.output.CLIPTypeInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.ExprMetaGetAttributesInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.ExprMetaGetChildCountInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.ExprMetaGetChildrenInfo;
@@ -589,8 +595,8 @@ public class MIVariableManager implements ICommandControl {
 		 * @since 4.1
 		 */
 		public void setType(String newTypeName) {
-			type = newTypeName;
-			gdbType = getGDBTypeParser().parse(newTypeName);
+			gdbType = fGDBTypeParser.parse(newTypeName);
+			type = gdbType.toString();
 		}
 
 		public void setValue(String format, String val) { valueMap.put(format, val); }
@@ -1568,23 +1574,30 @@ public class MIVariableManager implements ICommandControl {
 											}
 										}
 
-	        							if (childVar == null) {
-	        								childVar = createChild(childId, childFullExpression, indexInParent, child);
-											
-											childVar.hasCastToBaseClassWorkaround = childHasCastToBaseClassWorkaround;
-
-											if (fakeChild) {
-												fakeChildren.add(childVar.exprInfo);
-												addRealChildrenOfFake(childVar,	exprDmc, realChildren,
-														arrayPosition, countingRm);
-											} else {
-												// This is a real child
-												realChildren[arrayPosition] = new ExpressionInfo[] { childVar.exprInfo };
-												countingRm.done();
-											}
-	        							}
-	        						}
-	        					};
+										if (childVar == null) {
+											final IContainerDMContext containerDmc = DMContexts.getAncestorOfType(getRootToUpdate().getControlDMContext(), IContainerDMContext.class);
+											getDetailedType(child.getType(), containerDmc, new DataRequestMonitor<String>(fSession.getExecutor(), rm) {
+												@Override
+												protected void handleCompleted() {
+									            	child.setType(getData());
+									            	MIVariableObject childVar = createChild(childId, childFullExpression, indexInParent, child);
+													
+													childVar.hasCastToBaseClassWorkaround = childHasCastToBaseClassWorkaround;
+								
+													if (fakeChild) {
+														fakeChildren.add(childVar.exprInfo);
+														addRealChildrenOfFake(childVar,	exprDmc, realChildren,
+																arrayPosition, countingRm);
+													} else {
+														// This is a real child
+														realChildren[arrayPosition] = new ExpressionInfo[] { childVar.exprInfo };
+														countingRm.done();
+													}
+												}
+											});
+										}
+									}
+								};
 
 
 	        					if (isAccessQualifier(child.getExp())) {	        						
@@ -2171,50 +2184,58 @@ public class MIVariableManager implements ICommandControl {
 							@Override
 							protected void handleCompleted() {
 								if (isSuccess()) {
-									setGdbName(getData().getName());
-									setDisplayHint(getData().getDisplayHint());
+									final MIVarCreateInfo createInfoData = getData();
+									setGdbName(createInfoData.getName());
+									setDisplayHint(createInfoData.getDisplayHint());
 									
 									MIExpressionDMC miExprCtx = (MIExpressionDMC) exprCtx;
-									ExpressionInfo localExprInfo = miExprCtx
+									final ExpressionInfo localExprInfo = miExprCtx
 											.getExpressionInfo();
 									
-									localExprInfo.setDynamic(getData()
+									localExprInfo.setDynamic(createInfoData
 											.isDynamic());
-									
+
 									// Do not initialize the parent or indexInParent, since they may
 									// already be set to something. This will happen for arrays.
 									// Their default values are ok for other cases i.e., null and -1
 									// bug 420366
 
-									setExpressionData(
-											localExprInfo,
-											getData().getType(),
-											getData().getNumChildren(),
-											getData().hasMore());
-									
-									// Store the value returned at create (available in GDB 6.7)
-									// Don't store if it is an array, since we want to show
-									// the address of an array as its value
-									if (getData().getValue() != null && !isArray()) { 
-										setValue(getCurrentFormat(), getData().getValue());
-									}
-									
-									// If we are modifiable, we should be in our modifiable list
-									if (isModifiable()) {
-										addModifiableDescendant(getData().getName(), MIRootVariableObject.this);
-									}
+									final IContainerDMContext containerDmc = DMContexts.getAncestorOfType(getRootToUpdate().getControlDMContext(), IContainerDMContext.class);
+									getDetailedType(createInfoData.getType(), containerDmc, new DataRequestMonitor<String>(fSession.getExecutor(), rm) {
+										@Override
+										protected void handleCompleted() {
+											String detailedType = getData();
 
-									if (localExprInfo.isDynamic()
-											&& (localExprInfo.getChildCountLimit() != IMIExpressions.CHILD_COUNT_LIMIT_UNSPECIFIED)) {
-										
-										// Restore the original update range.
-										fCommandControl.queueCommand(fCommandFactory.createMIVarSetUpdateRange(
-												getRootToUpdate().getControlDMContext(),getGdbName(),
-												0,localExprInfo.getChildCountLimit()),
-												new DataRequestMonitor<MIInfo>(fSession.getExecutor(), rm));
-									} else {
-										rm.done();
-									}											 	        						
+											setExpressionData(
+													localExprInfo,
+													detailedType,
+													createInfoData.getNumChildren(),
+													createInfoData.hasMore());
+
+											// Store the value returned at create (available in GDB 6.7)
+											// Don't store if it is an array, since we want to show
+											// the address of an array as its value
+											if (createInfoData.getValue() != null && !isArray()) { 
+												setValue(getCurrentFormat(), createInfoData.getValue());
+											}
+
+											// If we are modifiable, we should be in our modifiable list
+											if (isModifiable()) {
+												addModifiableDescendant(createInfoData.getName(), MIRootVariableObject.this);
+											}
+									
+											if (localExprInfo.isDynamic()
+													&& (localExprInfo.getChildCountLimit() != IMIExpressions.CHILD_COUNT_LIMIT_UNSPECIFIED)) {
+												// Restore the original update range.
+												fCommandControl.queueCommand(fCommandFactory.createMIVarSetUpdateRange(
+														getRootToUpdate().getControlDMContext(),getGdbName(),
+														0,localExprInfo.getChildCountLimit()),
+														new DataRequestMonitor<MIInfo>(fSession.getExecutor(), rm));
+											} else {
+												rm.done();
+											}
+										}
+									});
 								} else {
 									rm.setStatus(getStatus());
 									rm.done();
@@ -3180,12 +3201,35 @@ public class MIVariableManager implements ICommandControl {
     protected boolean needFixForGDBBug320277() {
     	return true;
     }
-    
+
     /**
 	 * @since 4.4
 	 */
     protected GDBTypeParser createGDBTypeParser() {
 		return new GDBTypeParser();
     }
-    
+
+	private void getDetailedType(final String type, IContainerDMContext containerDmc, final DataRequestMonitor<String> rm) {
+		GDBType gdbType = fGDBTypeParser.parse(type);
+		if (gdbType.getType() == GDBType.GENERIC && !gdbType.toString().isEmpty()) {
+			fCommandControl.queueCommand(
+					fCommandFactory.createCLIPType(containerDmc, gdbType.getTypeName()),
+						new DataRequestMonitor<CLIPTypeInfo>(fSession.getExecutor(), rm) {
+						@Override
+						protected void handleCompleted() {
+							if (isSuccess()) {
+								CLIPTypeInfo data = getData();
+								rm.setData(data.getType());
+								rm.done();
+							} else {
+								rm.setData(type);
+								rm.done();
+							}
+						}
+					});
+		} else {
+			rm.setData(type);
+			rm.done();
+		}
+	}
 }

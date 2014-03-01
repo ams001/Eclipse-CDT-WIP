@@ -58,6 +58,7 @@ import org.eclipse.cdt.dsf.mi.service.command.commands.CLIInfoThreads;
 import org.eclipse.cdt.dsf.mi.service.command.commands.CLIJump;
 import org.eclipse.cdt.dsf.mi.service.command.commands.CLIMaintenance;
 import org.eclipse.cdt.dsf.mi.service.command.commands.CLIPasscount;
+import org.eclipse.cdt.dsf.mi.service.command.commands.CLIPType;
 import org.eclipse.cdt.dsf.mi.service.command.commands.CLIRecord;
 import org.eclipse.cdt.dsf.mi.service.command.commands.CLIRemoteGet;
 import org.eclipse.cdt.dsf.mi.service.command.commands.CLIShowEndian;
@@ -191,6 +192,7 @@ import org.eclipse.cdt.dsf.mi.service.command.output.CLIInfoBreakInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.CLIInfoProgramInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.CLIInfoSharedLibraryInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.CLIInfoThreadsInfo;
+import org.eclipse.cdt.dsf.mi.service.command.output.CLIPTypeInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.CLIShowEndianInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.CLIThreadInfo;
 import org.eclipse.cdt.dsf.mi.service.command.output.CLITraceDumpInfo;
@@ -309,6 +311,13 @@ public class CommandFactory {
 
 	public ICommand<MIInfo> createCLIPasscount(IBreakpointsTargetDMContext ctx, int breakpoint, int passcount) {
 		return new CLIPasscount(ctx, breakpoint, passcount);
+	}
+
+	/**
+	 * @since 4.3
+	 */
+	public ICommand<CLIPTypeInfo> createCLIPType(IContainerDMContext ctx, String var) {
+		return new CLIPType(ctx, var);
 	}
 
 	public ICommand<MIInfo> createCLIRecord(ICommandControlDMContext ctx, boolean enable) {
