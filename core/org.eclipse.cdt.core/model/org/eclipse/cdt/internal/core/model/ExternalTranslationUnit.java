@@ -14,6 +14,11 @@ package org.eclipse.cdt.internal.core.model;
 
 import java.net.URI;
 
+import org.eclipse.cdt.core.ICompileOptionsFinder;
+import org.eclipse.cdt.core.ISymbolReader;
+import org.eclipse.cdt.core.IBinaryParser.IBinaryObject;
+import org.eclipse.cdt.core.model.CModelException;
+import org.eclipse.cdt.core.model.IBinary;
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
@@ -41,5 +46,28 @@ public class ExternalTranslationUnit extends TranslationUnit {
 	 */
 	public void setResource(IFile file) {
 		resource= file;
+	}
+
+	@Override
+	public ICElement[] getChildren() throws CModelException {
+		if (fParent instanceof IBinary && isSourceUnit()) {
+			IBinary iBinary = (IBinary) fParent;
+			IBinaryObject adapter = (IBinaryObject) iBinary.getAdapter(IBinaryObject.class);
+			ISymbolReader adapter2 = (ISymbolReader) adapter.getAdapter(ISymbolReader.class);
+			if (adapter2 instanceof ICompileOptionsFinder) {
+				ICompileOptionsFinder iCompileOptionsFinder = (ICompileOptionsFinder) adapter2;
+				String osString = getLocation().toOSString();
+				String compileOptions = iCompileOptionsFinder.getCompileOptions(osString);
+				System.out.println(compileOptions);
+			}
+		}
+		return super.getChildren();
+	}
+
+	@Override
+	public boolean hasChildren() {
+
+		
+		return super.hasChildren();
 	}
 }

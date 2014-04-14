@@ -758,7 +758,7 @@ public class DwarfReader extends Dwarf implements ISymbolReader, ICompileOptions
 		ByteBuffer altstr = dwarfAltSections.get(DWARF_DEBUG_STR);
 		ArrayList<String> fixupList = new ArrayList<String>();
 		ArrayList<String> fixupAltList = new ArrayList<String>();
-		boolean DEBUG = false;
+		boolean DEBUG = true;
 		byte op;
 		if (data == null)
 			return;

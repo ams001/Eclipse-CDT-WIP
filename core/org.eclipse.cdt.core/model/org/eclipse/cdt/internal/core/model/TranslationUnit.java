@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.cdt.core.CCorePlugin;
+import org.eclipse.cdt.core.ICompileOptionsFinder;
+import org.eclipse.cdt.core.ISymbolReader;
+import org.eclipse.cdt.core.IBinaryParser.IBinaryObject;
 import org.eclipse.cdt.core.dom.ILinkage;
 import org.eclipse.cdt.core.dom.ast.IASTCompletionNode;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
@@ -40,6 +43,7 @@ import org.eclipse.cdt.core.model.AbstractLanguage;
 import org.eclipse.cdt.core.model.CModelException;
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.model.CoreModelUtil;
+import org.eclipse.cdt.core.model.IBinary;
 import org.eclipse.cdt.core.model.IBuffer;
 import org.eclipse.cdt.core.model.ICContainer;
 import org.eclipse.cdt.core.model.ICElement;
@@ -1245,5 +1249,21 @@ public class TranslationUnit extends Openable implements ITranslationUnit {
 	@Deprecated
 	public IWorkingCopy getSharedWorkingCopy(IProgressMonitor monitor, IBufferFactory factory) throws CModelException {
 		return CModelManager.getDefault().getSharedWorkingCopy(factory, this, null, monitor);
+	}
+	
+	@Override
+	public ICElement[] getChildren() throws CModelException {
+		if (fParent instanceof IBinary && isSourceUnit()) {
+			IBinary iBinary = (IBinary) fParent;
+			IBinaryObject adapter = (IBinaryObject) iBinary.getAdapter(IBinaryObject.class);
+			ISymbolReader adapter2 = (ISymbolReader) adapter.getAdapter(ISymbolReader.class);
+			if (adapter2 instanceof ICompileOptionsFinder) {
+				ICompileOptionsFinder iCompileOptionsFinder = (ICompileOptionsFinder) adapter2;
+				String osString = getLocation().toOSString();
+				String compileOptions = iCompileOptionsFinder.getCompileOptions(osString);
+				System.out.println(compileOptions);
+			}
+		}
+		return super.getChildren();
 	}
 }
