@@ -57,37 +57,10 @@ public class DiscoveredPathManager implements IDiscoveredPathManager, IResourceC
 
 	private static class DiscoveredInfoHolder {
 		Map<InfoContext, IDiscoveredPathInfo> fInfoMap = new HashMap<InfoContext, IDiscoveredPathInfo>();
-//		PathSettingsContainer fContainer = PathSettingsContainer.createRootContainer();
 
 		public IDiscoveredPathInfo getInfo(InfoContext context){
 			return fInfoMap.get(context);
 		}
-
-//		private Map getMap(IPath path, boolean create, boolean exactPath){
-//			PathSettingsContainer child = fContainer.getChildContainer(path, create, exactPath);
-//			Map map = null;
-//			if(child != null){
-//				map = (Map)child.getValue();
-//				if(map == null && create){
-//					map = new HashMap();
-//					child.setValue(map);
-//				}
-//			}
-//
-//			return map;
-//		}
-
-//		public IDiscoveredPathInfo getInfo(IFile file, String instanceId){
-//			IPath path = file.getProjectRelativePath();
-//			Map map = getMap(path, false, false);
-//			for(Iterator iter = map.entrySet().iterator(); iter.hasNext();){
-//				Map.Entry entry = (Map.Entry)iter.next();
-//				InfoContext context = (InfoContext)entry.getKey();
-//				if(context.matches(file))
-//					return (IDiscoveredPathInfo)entry.getValue();
-//			}
-//			return null;
-//		}
 
 		public IDiscoveredPathInfo setInfo(InfoContext context, IDiscoveredPathInfo info){
 			if(info != null)
@@ -191,30 +164,6 @@ public class DiscoveredPathManager implements IDiscoveredPathManager, IResourceC
         }
 		return pathInfo;
 	}
-
-
-
-
-//	private DiscoveredInfoHolder getHolder
-
-//	private IDiscoveredPathInfo loadPathInfo(IProject project) throws CoreException {
-//        IDiscoveredPathInfo pathInfo = null;
-//
-//        IScannerConfigBuilderInfo2 buildInfo = ScannerConfigProfileManager.createScannerConfigBuildInfo2(project);
-//        String profileId = buildInfo.getSelectedProfileId();
-//        SCProfileInstance profileInstance = ScannerConfigProfileManager.getInstance().
-//                getSCProfileInstance(project, profileId);
-//        IScannerInfoCollector collector = profileInstance.getScannerInfoCollector();
-//
-//        if (collector instanceof IScannerInfoCollector2) {
-//            IScannerInfoCollector2 collector2 = (IScannerInfoCollector2) collector;
-//            pathInfo = collector2.createPathInfoObject();
-//        }
-//        else {
-//            pathInfo = new DiscoveredPathInfo(project);
-//        }
-//		return pathInfo;
-//	}
 
 	@Override
 	public void removeDiscoveredInfo(IProject project) {

@@ -304,6 +304,25 @@ public class Messages extends NLS {
 	public static String SymbolTab_3;
 	public static String WorkingSetConfigAction_21;
 	public static String WorkingSetConfigAction_22;
+	
+	public static String ExclusionPatternDialog_title;
+	public static String ExclusionPatternDialog_pattern_label;
+	public static String ExclusionPatternDialog_pattern_add;
+	public static String ExclusionPatternDialog_pattern_add_multiple;
+	public static String ExclusionPatternDialog_pattern_remove;
+	public static String ExclusionPatternDialog_pattern_edit;
+	public static String ExclusionPatternDialog_ChooseExclusionPattern_title;
+	public static String ExclusionPatternDialog_ChooseExclusionPattern_description;
+	public static String ExclusionPatternEntryDialog_add_title;
+	public static String ExclusionPatternEntryDialog_edit_title;
+	public static String ExclusionPatternEntryDialog_description;
+	public static String ExclusionPatternEntryDialog_pattern_label;
+	public static String ExclusionPatternEntryDialog_pattern_button;
+	public static String ExclusionPatternEntryDialog_error_empty;
+	public static String ExclusionPatternEntryDialog_error_notrelative;
+	public static String ExclusionPatternEntryDialog_error_exists;
+	public static String ExclusionPatternEntryDialog_ChooseExclusionPattern_title;
+	public static String ExclusionPatternEntryDialog_ChooseExclusionPattern_description;
 
 	static {
 		// Initialize resource bundle.

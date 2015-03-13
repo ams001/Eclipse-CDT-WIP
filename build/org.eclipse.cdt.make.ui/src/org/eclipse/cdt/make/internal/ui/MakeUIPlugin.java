@@ -286,12 +286,6 @@ public class MakeUIPlugin extends AbstractUIPlugin {
 	}
 
 	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		new MakeStartup().schedule();
-	}
-
-	@Override
 	public void stop(BundleContext context) throws Exception {
 		if (fWorkingCopyManager != null) {
 			fWorkingCopyManager.shutdown();

@@ -46,7 +46,7 @@ import org.eclipse.cdt.ui.CUIPlugin;
 
 import org.eclipse.cdt.internal.ui.dialogs.TypedElementSelectionValidator;
 import org.eclipse.cdt.internal.ui.dialogs.TypedViewerFilter;
-import org.eclipse.cdt.internal.ui.dialogs.cpaths.CPathEntryMessages;
+import org.eclipse.cdt.internal.ui.newui.Messages;
 import org.eclipse.cdt.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.cdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.cdt.internal.ui.wizards.dialogfields.IDialogFieldListener;
@@ -75,17 +75,17 @@ public class ExPatternDialog extends StatusDialog {
 		fCurrProject = proj;
 		pattern = _data;
 		path = _path;
-		setTitle(CPathEntryMessages.ExclusionPatternDialog_title);
+		setTitle(Messages.ExclusionPatternDialog_title);
 
-		String label= NLS.bind(CPathEntryMessages.ExclusionPatternDialog_pattern_label,
+		String label= NLS.bind(Messages.ExclusionPatternDialog_pattern_label,
 				path.makeRelative().toString());
 
 		String[] buttonLabels= new String[] {
-			CPathEntryMessages.ExclusionPatternDialog_pattern_add,
-			CPathEntryMessages.ExclusionPatternDialog_pattern_add_multiple,
-			CPathEntryMessages.ExclusionPatternDialog_pattern_edit,
+			Messages.ExclusionPatternDialog_pattern_add,
+			Messages.ExclusionPatternDialog_pattern_add_multiple,
+			Messages.ExclusionPatternDialog_pattern_edit,
 			null,
-			CPathEntryMessages.ExclusionPatternDialog_pattern_remove
+			Messages.ExclusionPatternDialog_pattern_remove
 		};
 
 		ExclusionPatternAdapter adapter= new ExclusionPatternAdapter();
@@ -215,9 +215,9 @@ public class ExPatternDialog extends StatusDialog {
 		IResource initialElement= null;
 
 		ElementTreeSelectionDialog dialog= new ElementTreeSelectionDialog(getShell(), lp, cp);
-		dialog.setTitle(CPathEntryMessages.ExclusionPatternDialog_ChooseExclusionPattern_title);
+		dialog.setTitle(Messages.ExclusionPatternDialog_ChooseExclusionPattern_title);
 		dialog.setValidator(validator);
-		dialog.setMessage(CPathEntryMessages.ExclusionPatternDialog_ChooseExclusionPattern_description);
+		dialog.setMessage(Messages.ExclusionPatternDialog_ChooseExclusionPattern_description);
 		dialog.addFilter(filter);
 		dialog.setInput(fCurrSourceFolder);
 		dialog.setInitialSelection(initialElement);

@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * @version 	1.0
- * @author
  */
 public abstract class SharedPartWithButtons extends SharedPart {
 	private String[] buttonLabels;

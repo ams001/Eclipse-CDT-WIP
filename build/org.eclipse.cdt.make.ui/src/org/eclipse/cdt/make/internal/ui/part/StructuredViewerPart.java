@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 /**
  * @version 	1.0
- * @author
  */
 public abstract class StructuredViewerPart extends SharedPartWithButtons {
 	private StructuredViewer viewer;
