@@ -642,6 +642,13 @@
             parameter="(gcc)|([gc]\+\+)|(clang)"
             prefer-non-shared="true">
       </provider>
+      <provider
+            class="org.eclipse.cdt.managedbuilder.language.settings.providers.PkgConfigGCCBuildCommandParser"
+            id="org.eclipse.cdt.managedbuilder.core.PkgConfigGCCBuildCommandParser"
+            name="%PkgConfigGCCBuildOutputParser.name"
+            parameter="(gcc)|([gc]\+\+)|(clang)"
+            prefer-non-shared="true">
+      </provider>
    </extension>
    <extension
          id="scanner.discovery.problem"
