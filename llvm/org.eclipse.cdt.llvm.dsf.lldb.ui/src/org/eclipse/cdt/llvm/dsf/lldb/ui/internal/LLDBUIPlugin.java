@@ -1,0 +1,71 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Ericsson.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
+package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
+
+import org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LLDBPlugin;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.framework.BundleContext;
+
+/**
+ * The activator class controls the plug-in life cycle
+ */
+@SuppressWarnings("restriction")
+public class LLDBUIPlugin extends AbstractUIPlugin {
+
+	public static final String PLUGIN_ID = "org.eclipse.cdt.llvm.dsf.lldb.ui"; //$NON-NLS-1$
+	private static LLDBUIPlugin plugin;
+	private static IPreferenceStore fCorePreferenceStore;
+	private static IPreferenceStore fPreferenceStore;
+
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		plugin = this;
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
+	}
+
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
+	 */
+	public static LLDBUIPlugin getDefault() {
+		return plugin;
+	}
+
+	/**
+	 * Returns the preference store for this plug-in.
+	 */
+	@Override
+	public IPreferenceStore getPreferenceStore() {
+		if (fPreferenceStore == null) {
+			fPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, PLUGIN_ID);
+		}
+		return fPreferenceStore;
+	}
+
+	/**
+	 * Returns the preference store for the Core plug-in.
+	 */
+	public IPreferenceStore getCorePreferenceStore() {
+		if (fCorePreferenceStore == null) {
+			fCorePreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, LLDBPlugin.PLUGIN_ID);
+		}
+		return fCorePreferenceStore;
+	}
+
+}
