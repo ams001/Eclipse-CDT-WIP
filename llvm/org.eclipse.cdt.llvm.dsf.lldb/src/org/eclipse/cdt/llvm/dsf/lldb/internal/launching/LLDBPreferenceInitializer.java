@@ -8,19 +8,31 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.internal.launching;
 
+import java.io.File;
+
 import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
 import org.eclipse.cdt.llvm.dsf.lldb.ILLDBDebugPreferenceConstants;
 import org.eclipse.cdt.llvm.dsf.lldb.ILLDBLaunchConfigurationConstants;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 public class LLDBPreferenceInitializer extends AbstractPreferenceInitializer {
 
+	private static final String XCODE_BUNDLED_LLDB_PATH = "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb-mi"; //$NON-NLS-1$
+
+	private static String getDefaultCommand() {
+		if (Platform.getOS().equals(Platform.OS_MACOSX) && new File(XCODE_BUNDLED_LLDB_PATH).exists()) {
+			return XCODE_BUNDLED_LLDB_PATH;
+		}
+		return ILLDBLaunchConfigurationConstants.DEBUGGER_DEBUG_NAME_DEFAULT;
+	}
+
 	@Override
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(LLDBPlugin.PLUGIN_ID);
-		node.put(ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND, ILLDBLaunchConfigurationConstants.DEBUGGER_DEBUG_NAME_DEFAULT);
+		node.put(ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND, getDefaultCommand());
 		node.putBoolean(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN, ICDTLaunchConfigurationConstants.DEBUGGER_STOP_AT_MAIN_DEFAULT);
 		node.put(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL, ICDTLaunchConfigurationConstants.DEBUGGER_STOP_AT_MAIN_SYMBOL_DEFAULT);
 	}
