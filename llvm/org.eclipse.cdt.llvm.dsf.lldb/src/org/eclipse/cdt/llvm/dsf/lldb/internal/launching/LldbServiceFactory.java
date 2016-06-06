@@ -8,6 +8,7 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.internal.launching;
 
+import org.eclipse.cdt.dsf.debug.service.IBreakpoints;
 import org.eclipse.cdt.dsf.debug.service.command.ICommandControl;
 import org.eclipse.cdt.dsf.gdb.service.GdbDebugServicesFactory;
 import org.eclipse.cdt.dsf.mi.service.command.CommandFactory;
@@ -25,4 +26,8 @@ public class LldbServiceFactory extends GdbDebugServicesFactory {
 		return new LldbControl(session, config, new CommandFactory());
 	}
 
+	@Override
+	protected IBreakpoints createBreakpointService(DsfSession session) {
+		return new LldbBreakpoints(session);
+	}
 }
