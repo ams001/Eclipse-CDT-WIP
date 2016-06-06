@@ -19,6 +19,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -45,6 +47,12 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 		lbl.setText("LLDB command:");
 		fLLDBCommandText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fLLDBCommandText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		fLLDBCommandText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent evt) {
+					updateLaunchConfigurationDialog();
+			}
+		});
 
 		Button button = createPushButton(composite, "&Browse...", null); //$NON-NLS-1$
 		button.addSelectionListener(new SelectionAdapter() {
