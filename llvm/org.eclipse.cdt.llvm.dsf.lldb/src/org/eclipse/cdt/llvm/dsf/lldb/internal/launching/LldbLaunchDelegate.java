@@ -19,7 +19,7 @@ public class LldbLaunchDelegate extends GdbLaunchDelegate {
 
 	@Override
 	protected IDsfDebugServicesFactory newServiceFactory(ILaunchConfiguration config, String version) {
-		return super.newServiceFactory(config, version);
+		return new LldbServiceFactory(version, config);
 	}
 
     protected GdbLaunch createGdbLaunch(ILaunchConfiguration configuration, String mode, ISourceLocator locator) throws CoreException {
