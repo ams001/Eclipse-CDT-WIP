@@ -26,6 +26,7 @@ public class LldbFinalLaunchSequence extends FinalLaunchSequence_7_2 {
 	public void stepSetNonStop(RequestMonitor requestMonitor) {
 		// LLDB doesn't support non-stop and target-async cannot be disabled so
 		// do not do anything in this step
+		requestMonitor.done();
 	}
 
 }
