@@ -17,6 +17,10 @@ import org.eclipse.debug.core.model.ISourceLocator;
 
 public class LldbLaunchDelegate extends GdbLaunchDelegate {
 
+	public LldbLaunchDelegate() {
+		super();
+	}
+
 	public LldbLaunchDelegate(boolean requireCProject) {
 		super(requireCProject);
 	}
