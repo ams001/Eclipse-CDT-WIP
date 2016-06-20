@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.debug.core,
  org.eclipse.core.runtime,
  org.eclipse.cdt.dsf,
  org.eclipse.cdt.debug.core,
- org.eclipse.core.variables
+ org.eclipse.core.variables,
+ org.eclipse.cdt.core
 Export-Package: org.eclipse.cdt.llvm.dsf.lldb,
  org.eclipse.cdt.llvm.dsf.lldb.internal.launching;x-internal:=true
 Bundle-Activator: org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LLDBPlugin

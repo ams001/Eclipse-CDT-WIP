@@ -17,6 +17,10 @@ import org.eclipse.debug.core.model.ISourceLocator;
 
 public class LldbLaunchDelegate extends GdbLaunchDelegate {
 
+	public LldbLaunchDelegate(boolean requireCProject) {
+		super(requireCProject);
+	}
+
 	@Override
 	protected IDsfDebugServicesFactory newServiceFactory(ILaunchConfiguration config, String version) {
 		return new LldbServiceFactory(version, config);
