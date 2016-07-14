@@ -9,7 +9,8 @@
 package org.eclipse.cdt.llvm.dsf.lldb.ui;
 
 public class LLDBAttachCDebuggerTab extends LLDBLocalApplicationCDebuggerTab {
-    public LLDBAttachCDebuggerTab() {
+    @SuppressWarnings("restriction")
+	public LLDBAttachCDebuggerTab() {
         super();
         fAttachMode = true;
     }

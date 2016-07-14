@@ -44,7 +44,7 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		Label lbl = new Label(composite, SWT.LEFT);
 		lbl.setFont(parent.getFont());
-		lbl.setText("LLDB command:");
+		lbl.setText(Messages.LLDBCDebuggerPage_debugger_command);
 		fLLDBCommandText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fLLDBCommandText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		fLLDBCommandText.addModifyListener(new ModifyListener() {
@@ -54,7 +54,7 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 			}
 		});
 
-		Button button = createPushButton(composite, "&Browse...", null); //$NON-NLS-1$
+		Button button = createPushButton(composite, Messages.LLDBCDebuggerPage_browse, null);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent evt) {
@@ -64,7 +64,7 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 
 			private void handleGDBButtonSelected() {
 				FileDialog dialog = new FileDialog(getShell(), SWT.NONE);
-				dialog.setText("LLDB-MI Debugger"); //$NON-NLS-1$
+				dialog.setText(Messages.LLDBCDebuggerPage_browse_dialog_title);
 				String gdbCommand = fLLDBCommandText.getText().trim();
 				int lastSeparatorIndex = gdbCommand.lastIndexOf(File.separator);
 				if (lastSeparatorIndex != -1) {
@@ -112,7 +112,7 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 
 	@Override
 	public String getName() {
-		return "LLDB Debugger Options";
+		return Messages.LLDBCDebuggerPage_tab_name;
 	}
 
 }
