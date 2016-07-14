@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.ui;
+package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 import org.eclipse.cdt.debug.ui.ICDebuggerPage;
 import org.eclipse.cdt.dsf.gdb.internal.ui.launching.LocalApplicationCDebuggerTab;

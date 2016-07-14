@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.ui;
+package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 public class LLDBAttachCDebuggerTab extends LLDBLocalApplicationCDebuggerTab {
     @SuppressWarnings("restriction")

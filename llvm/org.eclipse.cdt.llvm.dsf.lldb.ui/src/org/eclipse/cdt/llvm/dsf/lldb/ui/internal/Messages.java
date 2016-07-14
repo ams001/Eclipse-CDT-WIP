@@ -6,12 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.ui;
+package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.cdt.llvm.dsf.lldb.ui.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.cdt.llvm.dsf.lldb.ui.internal.messages"; //$NON-NLS-1$
 	public static String LLDBCDebuggerPage_browse;
 	public static String LLDBCDebuggerPage_browse_dialog_title;
 	public static String LLDBCDebuggerPage_tab_name;

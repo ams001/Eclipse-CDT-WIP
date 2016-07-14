@@ -30,7 +30,7 @@
             id="org.eclipse.cdt.llvm.dsf.lldb.launch.localApplicationLaunch.debuggerTab"
             group="org.eclipse.cdt.launch.applicationLaunchTabGroup"
             name="%launchTab.debugger.name"
-            class="org.eclipse.cdt.llvm.dsf.lldb.ui.LLDBLocalApplicationCDebuggerTab">
+            class="org.eclipse.cdt.llvm.dsf.lldb.ui.internal.LLDBLocalApplicationCDebuggerTab">
         <associatedDelegate delegate="org.eclipse.cdt.llvm.dsf.lldb.launch.localCLaunch"/>
         <placement after="org.eclipse.debug.ui.environmentTab"/>
       </tab>
@@ -63,7 +63,7 @@
             id="org.eclipse.cdt.llvm.dsf.lldb.launch.attachLaunch.debuggerTab"
             group="org.eclipse.cdt.launch.attachLaunchTabGroup"
             name="%launchTab.debugger.name"
-            class="org.eclipse.cdt.llvm.dsf.lldb.ui.LLDBAttachCDebuggerTab">
+            class="org.eclipse.cdt.llvm.dsf.lldb.ui.internal.LLDBAttachCDebuggerTab">
         <associatedDelegate delegate="org.eclipse.cdt.llvm.dsf.lldb.launch.attachCLaunch"/>
         <placement after="org.eclipse.cdt.dsf.gdb.launch.mainTab"/>
       </tab>
