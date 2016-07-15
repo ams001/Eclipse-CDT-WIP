@@ -6,9 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb;
+package org.eclipse.cdt.llvm.dsf.lldb.core;
 
-import org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LLDBPlugin;
+import org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LLDBPlugin;
 
 public class ILLDBLaunchConfigurationConstants {
 

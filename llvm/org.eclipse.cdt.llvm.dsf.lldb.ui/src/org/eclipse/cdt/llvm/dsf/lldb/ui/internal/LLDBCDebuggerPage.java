@@ -11,8 +11,8 @@ package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 import java.io.File;
 
 import org.eclipse.cdt.debug.ui.AbstractCDebuggerPage;
-import org.eclipse.cdt.llvm.dsf.lldb.ILLDBDebugPreferenceConstants;
-import org.eclipse.cdt.llvm.dsf.lldb.ILLDBLaunchConfigurationConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;

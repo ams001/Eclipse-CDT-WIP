@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
 
 import java.io.File;
 
 import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
-import org.eclipse.cdt.llvm.dsf.lldb.ILLDBDebugPreferenceConstants;
-import org.eclipse.cdt.llvm.dsf.lldb.ILLDBLaunchConfigurationConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBLaunchConfigurationConstants;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;

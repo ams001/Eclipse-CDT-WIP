@@ -11,7 +11,7 @@
  *     Jason Litton (Sage Electronic Engineering, LLC) - Added support for dynamic tracing option (Bug 379169)
  *     Alvaro Sanchez-Leon (Ericsson AB) - Each memory context needs a different MemoryRetrieval (Bug 250323)
  *******************************************************************************/
-package org.eclipse.cdt.llvm.dsf.lldb.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

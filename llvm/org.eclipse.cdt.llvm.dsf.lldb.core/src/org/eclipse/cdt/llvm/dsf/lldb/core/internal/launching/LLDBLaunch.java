@@ -6,11 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
 
 import org.eclipse.cdt.dsf.gdb.IGDBLaunchConfigurationConstants;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
-import org.eclipse.cdt.llvm.dsf.lldb.ILLDBLaunchConfigurationConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;

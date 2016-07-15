@@ -8,7 +8,7 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
-import org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LLDBPlugin;
+import org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LLDBPlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

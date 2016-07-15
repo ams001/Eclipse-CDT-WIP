@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
 
 public class LldbAttachLaunchDelegate extends LldbLaunchDelegate {
 

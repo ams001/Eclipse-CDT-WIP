@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
-Bundle-SymbolicName: org.eclipse.cdt.llvm.dsf.lldb;singleton:=true
+Bundle-SymbolicName: org.eclipse.cdt.llvm.dsf.lldb.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.debug.core,
  org.eclipse.cdt.debug.core,
  org.eclipse.core.variables,
  org.eclipse.cdt.core
-Export-Package: org.eclipse.cdt.llvm.dsf.lldb,
- org.eclipse.cdt.llvm.dsf.lldb.internal.launching;x-internal:=true
-Bundle-Activator: org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LLDBPlugin
+Export-Package: org.eclipse.cdt.llvm.dsf.lldb.core,
+ org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;x-internal:=true
+Bundle-Activator: org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LLDBPlugin
 Bundle-ActivationPolicy: lazy

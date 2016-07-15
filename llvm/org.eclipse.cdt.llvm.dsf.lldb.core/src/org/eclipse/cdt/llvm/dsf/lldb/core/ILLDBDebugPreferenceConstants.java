@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.cdt.llvm.dsf.lldb;
+package org.eclipse.cdt.llvm.dsf.lldb.core;
 
 /**
  * @noimplement This interface is not intended to be implemented by clients.

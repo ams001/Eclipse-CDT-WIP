@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.debug.core.launchDelegates">
       <launchDelegate
-            delegate="org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LldbLaunchDelegate"
+            delegate="org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LldbLaunchDelegate"
             delegateDescription="%launchDelegate.localApplication.description"
             id="org.eclipse.cdt.llvm.dsf.lldb.launch.localCLaunch"
             modes="debug"
@@ -17,7 +17,7 @@
             id="org.eclipse.cdt.llvm.dsf.lldb.launch.attachCLaunch"
             type="org.eclipse.cdt.launch.attachLaunchType"
             modes="debug"
-            delegate="org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LldbAttachLaunchDelegate"
+            delegate="org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LldbAttachLaunchDelegate"
             name="%launchDelegate.attach.name"
             delegateDescription="%launchDelegate.attach.description"
             sourceLocatorId="org.eclipse.cdt.debug.core.sourceLocator"
@@ -27,7 +27,7 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.eclipse.cdt.llvm.dsf.lldb.internal.launching.LLDBPreferenceInitializer">
+            class="org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LLDBPreferenceInitializer">
       </initializer>
    </extension>
 </plugin>
