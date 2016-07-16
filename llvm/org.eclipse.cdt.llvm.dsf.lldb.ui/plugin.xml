@@ -83,6 +83,15 @@
         <associatedDelegate delegate="org.eclipse.cdt.llvm.dsf.lldb.launch.attachCLaunch"/>
         <placement after="org.eclipse.debug.ui.sourceLookupTab"/>
       </tab>
-   </extension> 
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.cdt.debug.ui.CDebugPreferencePage"
+            class="org.eclipse.cdt.llvm.dsf.lldb.ui.internal.LLDBDebugPreferencePage"
+            id="org.eclipse.cdt.llvm.dsf.lldb.ui.preferences"
+            name="%lldbPreferencePage.name">
+      </page>
+   </extension>
 
 </plugin>

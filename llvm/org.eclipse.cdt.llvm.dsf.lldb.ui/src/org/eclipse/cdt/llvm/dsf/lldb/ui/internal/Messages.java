@@ -16,6 +16,9 @@ public class Messages extends NLS {
 	public static String LLDBCDebuggerPage_browse_dialog_title;
 	public static String LLDBCDebuggerPage_tab_name;
 	public static String LLDBCDebuggerPage_debugger_command;
+	public static String LLDBDebugPreferencePage_description;
+	public static String LLDBDebugPreferencePage_defaults_label;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

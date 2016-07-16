@@ -21,7 +21,7 @@ import org.osgi.framework.BundleContext;
  */
 public class LLDBPlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.cdt.llvm.dsf.lldb"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.cdt.llvm.dsf.lldb.core"; //$NON-NLS-1$
 	private static LLDBPlugin plugin;
 
 	@Override
