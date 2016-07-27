@@ -8,8 +8,15 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
+import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
 import org.eclipse.cdt.debug.ui.ICDebuggerPage;
 import org.eclipse.cdt.dsf.gdb.internal.ui.launching.LocalApplicationCDebuggerTab;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBLaunchConfigurationConstants;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -31,6 +38,40 @@ public class LLDBLocalApplicationCDebuggerTab extends LocalApplicationCDebuggerT
 			setDebuggerId(LOCAL_DEBUGGER_ID);
 			updateComboFromSelection();
 		}
+	}
+
+	/*
+	 * This flag it to make sure that setDefaults gets called, even if the config is initially created for another delegate (GDB) then switched to LLDB.
+	 */
+	private final static String DEFAULTS_SET = "org.eclipse.cdt.llvm.dsf.lldb.ui.internal.LLDBLocalApplicationCDebuggerTab.DEFAULTS_SET"; //$NON-NLS-1$
+
+	@Override
+	public void initializeFrom(ILaunchConfiguration config) {
+		try {
+			if (config.hasAttribute(DEFAULTS_SET) == false) {
+				ILaunchConfigurationWorkingCopy wc;
+				wc = config.getWorkingCopy();
+				setDefaults(wc);
+				wc.doSave();
+			}
+		} catch (CoreException e) {
+		}
+
+		super.initializeFrom(config);
+	}
+
+	@Override
+	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
+		super.setDefaults(config);
+		IPreferenceStore corePreferenceStore = LLDBUIPlugin.getDefault().getCorePreferenceStore();
+		config.setAttribute(ILLDBLaunchConfigurationConstants.ATTR_DEBUG_NAME,
+				corePreferenceStore.getString(ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND));
+		config.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_STOP_AT_MAIN,
+				corePreferenceStore.getBoolean(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN));
+		config.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_STOP_AT_MAIN_SYMBOL,
+				corePreferenceStore.getString(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL));
+
+		config.setAttribute(DEFAULTS_SET, true);
 	}
 
 	protected void loadDynamicDebugArea() {

@@ -10,6 +10,7 @@ package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 import java.io.File;
 
+import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
 import org.eclipse.cdt.debug.ui.AbstractCDebuggerPage;
 import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
 import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBLaunchConfigurationConstants;
@@ -81,9 +82,16 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
+		// I'm actually not sure this is needed but it seems this will be called
+		// if this delegate is used when first initializing defaults (i.e. GDB
+		// is not the delegate for this configuration first)
 		IPreferenceStore corePreferenceStore = LLDBUIPlugin.getDefault().getCorePreferenceStore();
 		configuration.setAttribute(ILLDBLaunchConfigurationConstants.ATTR_DEBUG_NAME,
 				corePreferenceStore.getString(ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND));
+		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_STOP_AT_MAIN,
+				corePreferenceStore.getBoolean(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN));
+		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_STOP_AT_MAIN_SYMBOL,
+				corePreferenceStore.getBoolean(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL));
 	}
 
 	@Override

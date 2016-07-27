@@ -9,6 +9,7 @@ package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 import java.io.File;
 
+import org.eclipse.cdt.dsf.debug.internal.ui.preferences.StringWithBooleanFieldEditor;
 import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -32,10 +33,14 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private StringFieldEditor fStringFieldEditorCommand;
+	private StringWithBooleanFieldEditor fEnableStopAtMain;
 
 	public LLDBDebugPreferencePage() {
 		super(FLAT);
-		IPreferenceStore store = LLDBUIPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = LLDBUIPlugin.getDefault().getCorePreferenceStore();
+		// Note that if we don't set it here, it actually never gets flushed. If
+		// this page was to use two preference stores, make sure that both are
+		// flushed.
 		setPreferenceStore(store);
 		setDescription(Messages.LLDBDebugPreferencePage_description);
 	}
@@ -59,7 +64,6 @@ public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implement
 
 		fStringFieldEditorCommand = new StringFieldEditor(ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND,
 				Messages.LLDBCDebuggerPage_debugger_command, group1);
-		fStringFieldEditorCommand.setPreferenceStore(LLDBUIPlugin.getDefault().getCorePreferenceStore());
 
 		fStringFieldEditorCommand.fillIntoGrid(group1, 2);
 		addField(fStringFieldEditorCommand);
@@ -72,14 +76,16 @@ public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implement
 			}
 		});
 		setButtonLayoutData(browsebutton);
-		group1.setLayout(groupLayout);
-	}
 
-	@Override
-	protected void initialize() {
-		super.initialize();
-		fStringFieldEditorCommand.setPreferenceStore(LLDBUIPlugin.getDefault().getCorePreferenceStore());
-		fStringFieldEditorCommand.load();
+		fEnableStopAtMain = new StringWithBooleanFieldEditor(
+				ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN,
+				ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL,
+				Messages.LLDBDebugPreferencePage_Stop_on_startup_at,
+				group1);
+		fEnableStopAtMain.fillIntoGrid(group1, 3);
+		addField(fEnableStopAtMain);
+
+		group1.setLayout(groupLayout);
 	}
 
 	private void handleBrowseButtonSelected(final String dialogTitle, final StringFieldEditor stringFieldEditor) {
