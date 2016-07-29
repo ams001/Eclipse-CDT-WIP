@@ -43,6 +43,12 @@ public class LLDBLaunch extends GdbLaunch {
 		}
 	}
 
+	@Override
+	public String getGDBInitFile() throws CoreException {
+		// Not supported by LLDB-MI right now
+		return null;
+	}
+
 	public void setGDBPath(String path) {
 		setAttribute(ILLDBLaunchConfigurationConstants.ATTR_DEBUG_NAME, path);
 	}
