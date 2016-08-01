@@ -19,6 +19,7 @@ public class Messages extends NLS {
 	public static String LLDBDebugPreferencePage_Stop_on_startup_at;
 	public static String LLDBDebugPreferencePage_description;
 	public static String LLDBDebugPreferencePage_defaults_label;
+	public static String LLDBDebugPreferencePage_see_gdb_preferences;
 
 	static {
 		// initialize resource bundle

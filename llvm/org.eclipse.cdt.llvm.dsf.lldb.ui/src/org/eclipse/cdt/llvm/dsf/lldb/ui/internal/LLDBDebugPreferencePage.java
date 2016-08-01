@@ -21,10 +21,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
  * A preference page for settings that are currently supported in LLDB. Based on
@@ -66,6 +71,9 @@ public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implement
 				Messages.LLDBCDebuggerPage_debugger_command, group1);
 
 		fStringFieldEditorCommand.fillIntoGrid(group1, 2);
+		GridData stringFieldLayoutData = (GridData) fStringFieldEditorCommand.getTextControl(group1).getLayoutData();
+		stringFieldLayoutData.widthHint = 300;
+
 		addField(fStringFieldEditorCommand);
 		Button browsebutton = new Button(group1, SWT.PUSH);
 		browsebutton.setText(Messages.LLDBCDebuggerPage_browse);
@@ -86,6 +94,25 @@ public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implement
 		addField(fEnableStopAtMain);
 
 		group1.setLayout(groupLayout);
+
+		createLinkToGdb(parent);
+	}
+
+	private Control createLinkToGdb(Composite parent) {
+		String text = Messages.LLDBDebugPreferencePage_see_gdb_preferences;
+		Link link = new Link(parent, SWT.NONE);
+		link.setText(text);
+		link.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				PreferencesUtil.createPreferenceDialogOn(getShell(), event.text, null, null);
+			}
+		});
+
+		GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+		gridData.widthHint = 150;
+		link.setLayoutData(gridData);
+		return link;
 	}
 
 	private void handleBrowseButtonSelected(final String dialogTitle, final StringFieldEditor stringFieldEditor) {
