@@ -26,6 +26,11 @@ public class LldbLaunchDelegate extends GdbLaunchDelegate {
 	}
 
 	@Override
+	protected String getCLILabel(ILaunchConfiguration config, String gdbVersion) throws CoreException {
+		return LLDBLaunch.getLLDBPath(config).toString().trim() + " (" + Messages.LldbLaunchDelegate_mimicking_gdb + " gdb " + gdbVersion + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	@Override
 	protected IDsfDebugServicesFactory newServiceFactory(ILaunchConfiguration config, String version) {
 		return new LldbServiceFactory(version, config);
 	}
