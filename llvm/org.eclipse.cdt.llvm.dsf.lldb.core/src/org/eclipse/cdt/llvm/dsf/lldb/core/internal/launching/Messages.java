@@ -13,6 +13,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.messages"; //$NON-NLS-1$
 	public static String LldbLaunchDelegate_mimicking_gdb;
+	public static String LldbProcesses_unknown_process_name;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

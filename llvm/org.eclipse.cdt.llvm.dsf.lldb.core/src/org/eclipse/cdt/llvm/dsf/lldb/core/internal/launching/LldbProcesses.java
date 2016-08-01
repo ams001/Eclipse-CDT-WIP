@@ -17,6 +17,7 @@ import org.eclipse.cdt.core.IProcessList;
 import org.eclipse.cdt.dsf.concurrent.DataRequestMonitor;
 import org.eclipse.cdt.dsf.datamodel.DMContexts;
 import org.eclipse.cdt.dsf.datamodel.IDMContext;
+import org.eclipse.cdt.dsf.debug.service.IProcesses;
 import org.eclipse.cdt.dsf.debug.service.command.ICommandControlService.ICommandControlDMContext;
 import org.eclipse.cdt.dsf.gdb.service.GDBProcesses_7_4;
 import org.eclipse.cdt.dsf.gdb.service.IGDBBackend;
@@ -25,6 +26,18 @@ import org.eclipse.cdt.dsf.mi.service.IMIProcessDMContext;
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * Provides processes information see {@link IProcesses}
+ *
+ * This LLDB specific implementation was initially created in order to be able
+ * to get the list of processes in the absence of the MI command
+ *
+ * <pre>
+ * -list-thread-groups --available
+ * </pre>
+ *
+ * This is used notably when attaching to processes.
+ */
 public class LldbProcesses extends GDBProcesses_7_4 {
 
 	// A map of pid to names. It is filled when we get all the
@@ -89,9 +102,16 @@ public class LldbProcesses extends GDBProcesses_7_4 {
 			} catch (NumberFormatException e) {
 			}
 
+			// It's possible that we get here without getRunningProcesses called
+			// yet so the process names map will be empty. This can happen when
+			// doing local debugging but not attach mode.
+			if (fProcessNames.isEmpty()) {
+				getRunningProcesses(dmc, new DataRequestMonitor<>(getExecutor(), rm));
+			}
+
 			String name = fProcessNames.get(pid);
 			if (name == null) {
-				name = "Unknown name"; //$NON-NLS-1$
+				name = Messages.LldbProcesses_unknown_process_name;
 			}
 
 			rm.setData(new LldbMIThreadDMData(name, pidStr));
