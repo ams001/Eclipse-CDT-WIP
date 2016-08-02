@@ -11,7 +11,7 @@
  *     Jason Litton (Sage Electronic Engineering, LLC) - Added support for dynamic tracing option (Bug 379169)
  *     Alvaro Sanchez-Leon (Ericsson AB) - Each memory context needs a different MemoryRetrieval (Bug 250323)
  *******************************************************************************/
-package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -19,10 +19,13 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class LLDBPlugin extends Plugin {
+public class LLDBCorePlugin extends Plugin {
 
+	/**
+	 * LLDB Core Plug-in ID
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.cdt.llvm.dsf.lldb.core"; //$NON-NLS-1$
-	private static LLDBPlugin plugin;
+	private static LLDBCorePlugin plugin;
 
 	@Override
     public void start(BundleContext context) throws Exception {
@@ -41,7 +44,7 @@ public class LLDBPlugin extends Plugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static LLDBPlugin getDefault() {
+	public static LLDBCorePlugin getDefault() {
 		return plugin;
 	}
 }

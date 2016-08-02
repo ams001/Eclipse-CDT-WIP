@@ -9,7 +9,6 @@ package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 import java.io.File;
 
-import org.eclipse.cdt.dsf.debug.internal.ui.preferences.StringWithBooleanFieldEditor;
 import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -38,8 +37,12 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private StringFieldEditor fStringFieldEditorCommand;
-	private StringWithBooleanFieldEditor fEnableStopAtMain;
+	@SuppressWarnings("restriction")
+	private org.eclipse.cdt.dsf.debug.internal.ui.preferences.StringWithBooleanFieldEditor fEnableStopAtMain;
 
+	/**
+	 * Constructs the preference page.
+	 */
 	public LLDBDebugPreferencePage() {
 		super(FLAT);
 		IPreferenceStore store = LLDBUIPlugin.getDefault().getCorePreferenceStore();
@@ -85,17 +88,26 @@ public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implement
 		});
 		setButtonLayoutData(browsebutton);
 
-		fEnableStopAtMain = new StringWithBooleanFieldEditor(
-				ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN,
-				ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL,
-				Messages.LLDBDebugPreferencePage_Stop_on_startup_at,
-				group1);
+		fEnableStopAtMain = createStopAtMainEditor(group1);
 		fEnableStopAtMain.fillIntoGrid(group1, 3);
 		addField(fEnableStopAtMain);
 
 		group1.setLayout(groupLayout);
 
 		createLinkToGdb(parent);
+	}
+
+	/*
+	 * Using full qualified name for return value here so that we don't have to
+	 * suppress warning on the whole class.
+	 */
+	@SuppressWarnings("restriction")
+	private static org.eclipse.cdt.dsf.debug.internal.ui.preferences.StringWithBooleanFieldEditor createStopAtMainEditor(final Group group1) {
+		return new org.eclipse.cdt.dsf.debug.internal.ui.preferences.StringWithBooleanFieldEditor(
+				ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN,
+				ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL,
+				Messages.LLDBDebugPreferencePage_Stop_on_startup_at,
+				group1);
 	}
 
 	private Control createLinkToGdb(Composite parent) {
@@ -132,6 +144,6 @@ public class LLDBDebugPreferencePage extends FieldEditorPreferencePage implement
 
 	@Override
 	protected void adjustGridLayout() {
-		// do nothing
+		// Do nothing, already handled during creation of controls.
 	}
 }

@@ -10,6 +10,10 @@ package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * Messages related to preferences and launch configuration.
+ */
+@SuppressWarnings("javadoc")
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.cdt.llvm.dsf.lldb.ui.internal.messages"; //$NON-NLS-1$
 	public static String LLDBCDebuggerPage_browse;

@@ -8,15 +8,21 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.core;
 
-import org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LLDBPlugin;
+import org.eclipse.cdt.llvm.dsf.lldb.core.internal.LLDBCorePlugin;
 
+/**
+ * Preference constants that are used in some ways by the LLDB launch
+ * configuration.
+ *
+ * @noimplement This interface is not intended to be implemented by clients.
+ */
 public class ILLDBLaunchConfigurationConstants {
 
 	/**
 	 * Launch configuration attribute key. The value is the name of
 	 * the Debuger associated with a C/C++ launch configuration.
 	 */
-	public static final String ATTR_DEBUG_NAME = LLDBPlugin.PLUGIN_ID + ".DEBUG_NAME"; //$NON-NLS-1$
+	public static final String ATTR_DEBUG_NAME = LLDBCorePlugin.PLUGIN_ID + ".DEBUG_NAME"; //$NON-NLS-1$
 
 	/**
 	 * Launch configuration attribute value. The key is ATTR_DEBUG_NAME.

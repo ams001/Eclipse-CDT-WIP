@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,13 +38,19 @@ import org.eclipse.core.runtime.CoreException;
  *
  * This is used notably when attaching to processes.
  */
-public class LldbProcesses extends GDBProcesses_7_4 {
+public class LLDBProcesses extends GDBProcesses_7_4 {
 
 	// A map of pid to names. It is filled when we get all the
 	// processes that are running
 	private Map<Integer, String> fProcessNames = new HashMap<Integer, String>();
 
-	public LldbProcesses(DsfSession session) {
+	/**
+	 * Constructs the {@link LLDBProcesses} service.
+	 *
+	 * @param session
+	 *            The debugging session
+	 */
+	public LLDBProcesses(DsfSession session) {
 		super(session);
 	}
 
@@ -111,21 +117,21 @@ public class LldbProcesses extends GDBProcesses_7_4 {
 
 			String name = fProcessNames.get(pid);
 			if (name == null) {
-				name = Messages.LldbProcesses_unknown_process_name;
+				name = Messages.LLDBProcesses_unknown_process_name;
 			}
 
-			rm.setData(new LldbMIThreadDMData(name, pidStr));
+			rm.setData(new LLDBMIThreadDMData(name, pidStr));
 			rm.done();
 		} else {
 			super.getExecutionData(dmc, rm);
 		}
 	}
 
-	private static class LldbMIThreadDMData implements IThreadDMData {
+	private static class LLDBMIThreadDMData implements IThreadDMData {
 		final String fName;
 		final String fId;
 
-		public LldbMIThreadDMData(String name, String id) {
+		public LLDBMIThreadDMData(String name, String id) {
 			fName = name;
 			fId = id;
 		}

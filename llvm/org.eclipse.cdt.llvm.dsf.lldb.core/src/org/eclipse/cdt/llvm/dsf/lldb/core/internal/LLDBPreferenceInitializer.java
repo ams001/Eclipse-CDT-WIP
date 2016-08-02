@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal;
 
 import java.io.File;
 
@@ -18,6 +18,9 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
+/**
+ * Initializes default values for LLDB preferences.
+ */
 public class LLDBPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	private static final String XCODE_BUNDLED_LLDB_PATH = "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb-mi"; //$NON-NLS-1$
@@ -31,7 +34,7 @@ public class LLDBPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
-		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(LLDBPlugin.PLUGIN_ID);
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(LLDBCorePlugin.PLUGIN_ID);
 		node.put(ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND, getDefaultCommand());
 		node.putBoolean(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN, ICDTLaunchConfigurationConstants.DEBUGGER_STOP_AT_MAIN_DEFAULT);
 		node.put(ILLDBDebugPreferenceConstants.PREF_DEFAULT_STOP_AT_MAIN_SYMBOL, ICDTLaunchConfigurationConstants.DEBUGGER_STOP_AT_MAIN_SYMBOL_DEFAULT);

@@ -8,7 +8,7 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
-import org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching.LLDBPlugin;
+import org.eclipse.cdt.llvm.dsf.lldb.core.internal.LLDBCorePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -18,9 +18,11 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-@SuppressWarnings("restriction")
 public class LLDBUIPlugin extends AbstractUIPlugin {
 
+	/**
+	 * LLDB UI Plug-in ID
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.cdt.llvm.dsf.lldb.ui"; //$NON-NLS-1$
 	private static LLDBUIPlugin plugin;
 	private static IPreferenceStore fCorePreferenceStore;
@@ -60,10 +62,12 @@ public class LLDBUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the preference store for the Core plug-in.
+	 *
+	 * @return the Core plug-in preference store
 	 */
 	public IPreferenceStore getCorePreferenceStore() {
 		if (fCorePreferenceStore == null) {
-			fCorePreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, LLDBPlugin.PLUGIN_ID);
+			fCorePreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, LLDBCorePlugin.PLUGIN_ID);
 		}
 		return fCorePreferenceStore;
 	}

@@ -15,9 +15,24 @@ import org.eclipse.cdt.dsf.concurrent.RequestMonitorWithProgress;
 import org.eclipse.cdt.dsf.gdb.launching.FinalLaunchSequence_7_2;
 import org.eclipse.cdt.dsf.service.DsfSession;
 
-public class LldbFinalLaunchSequence extends FinalLaunchSequence_7_2 {
+/**
+ * A LLDB-specific launch sequence that was initially created to work around the
+ * fact that LLDB always has to run in async mode, even in all-stop.
+ */
+public class LLDBFinalLaunchSequence extends FinalLaunchSequence_7_2 {
 
-	public LldbFinalLaunchSequence(DsfSession session, Map<String, Object> attributes, RequestMonitorWithProgress rm) {
+	/**
+	 * Constructs the {@link LLDBFinalLaunchSequence}.
+	 *
+	 * @param session
+	 *            The debugging session
+	 * @param attributes
+	 *            the launch configuration attributes
+	 * @param rm
+	 *            a request monitor that will indicate when the sequence is
+	 *            completed
+	 */
+	public LLDBFinalLaunchSequence(DsfSession session, Map<String, Object> attributes, RequestMonitorWithProgress rm) {
 		super(session, attributes, rm);
 	}
 

@@ -11,6 +11,7 @@ package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
 import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBDebugPreferenceConstants;
 import org.eclipse.cdt.llvm.dsf.lldb.core.ILLDBLaunchConfigurationConstants;
+import org.eclipse.cdt.llvm.dsf.lldb.core.internal.LLDBCorePlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -19,12 +20,28 @@ import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ISourceLocator;
 
+/**
+ * LLDB specific launch. It mostly deals with setting up the paths correctly.
+ */
 public class LLDBLaunch extends GdbLaunch {
 
+	/**
+	 * Constructs a launch.
+	 *
+	 * @param launchConfiguration
+	 *            the launch configuration
+	 * @param mode
+	 *            the launch mode, i.e., debug, profile, etc.
+	 * @param locator
+	 */
 	public LLDBLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
 		super(launchConfiguration, mode, locator);
 	}
 
+	/*
+	 * TODO: GdbLaunch.getGDBPath() and setGDBPath() should reference each other
+	 * in the javadoc to make sure extenders override both.
+	 */
 	public IPath getGDBPath() {
 		String lldbPath = getAttribute(ILLDBLaunchConfigurationConstants.ATTR_DEBUG_NAME);
 		if (lldbPath != null) {
@@ -34,6 +51,17 @@ public class LLDBLaunch extends GdbLaunch {
 		return getLLDBPath(getLaunchConfiguration());
 	}
 
+	public void setGDBPath(String path) {
+		setAttribute(ILLDBLaunchConfigurationConstants.ATTR_DEBUG_NAME, path);
+	}
+
+	/**
+	 * Get the LLDB path based on a launch configuration.
+	 *
+	 * @param configuration
+	 *            the launch configuration.
+	 * @return the LLDB path
+	 */
 	public static IPath getLLDBPath(ILaunchConfiguration configuration) {
 		String defaultLLdbCommand = getDefaultLLDBPath();
 
@@ -43,7 +71,7 @@ public class LLDBLaunch extends GdbLaunch {
 			lldbPath = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(lldbPath, false);
 			retVal = new Path(lldbPath);
 		} catch (CoreException e) {
-			LLDBPlugin.getDefault().getLog().log(e.getStatus());
+			LLDBCorePlugin.getDefault().getLog().log(e.getStatus());
 		}
 		return retVal;
 	}
@@ -53,19 +81,16 @@ public class LLDBLaunch extends GdbLaunch {
 	}
 
 	private static String getDefaultLLDBPath() {
-		return Platform.getPreferencesService().getString(LLDBPlugin.PLUGIN_ID,
+		return Platform.getPreferencesService().getString(LLDBCorePlugin.PLUGIN_ID,
 				ILLDBDebugPreferenceConstants.PREF_DEFAULT_LLDB_COMMAND,
 				ILLDBLaunchConfigurationConstants.DEBUGGER_DEBUG_NAME_DEFAULT, null);
 	}
 
 	@Override
 	public String getGDBInitFile() throws CoreException {
-		// Not supported by LLDB-MI right now
+		// Not supported by LLDB-MI right now. There is also no MI command in
+		// GDB to source a file. We should look into adding this in GDB first.
 		return null;
-	}
-
-	public void setGDBPath(String path) {
-		setAttribute(ILLDBLaunchConfigurationConstants.ATTR_DEBUG_NAME, path);
 	}
 
 	@Override
@@ -73,8 +98,6 @@ public class LLDBLaunch extends GdbLaunch {
 		IPath path = new Path(super.getProgramPath());
 		if (!path.isAbsolute()) {
 			path = getGDBWorkingDirectory().append(path);
-//			File file = new File(path.toOSString());
-//			path = new Path(file.getAbsolutePath());
 		}
 		return path.toOSString();
 	}

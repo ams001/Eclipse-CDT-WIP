@@ -8,6 +8,8 @@
 package org.eclipse.cdt.llvm.dsf.lldb.core;
 
 /**
+ * Preference constants that affect behavior in the core LLDB plugin.
+ *
  * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface ILLDBDebugPreferenceConstants {

@@ -8,9 +8,15 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
 
-public class LldbAttachLaunchDelegate extends LldbLaunchDelegate {
+/**
+ * LLDB launch delegate for attaching.
+ */
+public class LLDBAttachLaunchDelegate extends LLDBLaunchDelegate {
 
-	public LldbAttachLaunchDelegate() {
+	/**
+	 * Creates the launch delegate.
+	 */
+	public LLDBAttachLaunchDelegate() {
 		// For an attach session, we don't require a project
 		// to be specified
 		super(false);

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.llvm.dsf.lldb.core.internal.launching;
+package org.eclipse.cdt.llvm.dsf.lldb.core.internal.service;
 
 import org.eclipse.cdt.dsf.debug.service.IBreakpoints;
 import org.eclipse.cdt.dsf.debug.service.IProcesses;
@@ -16,24 +16,35 @@ import org.eclipse.cdt.dsf.mi.service.command.CommandFactory;
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
-public class LldbServiceFactory extends GdbDebugServicesFactory {
+/**
+ * A service factor specific to LLDB that replaces some services in order to
+ * offer a more tailored experience and mostly work around some issues with
+ * LLDB-MI.
+ */
+public class LLDBServiceFactory extends GdbDebugServicesFactory {
 
-	public LldbServiceFactory(String version, ILaunchConfiguration config) {
+	/**
+	 * Constructs the {@link LLDBServiceFactory}.
+	 *
+	 * @param version the GDB-equivalent version of LLDB
+	 * @param config the launch configuration
+	 */
+	public LLDBServiceFactory(String version, ILaunchConfiguration config) {
 		super(version, config);
 	}
 
 	@Override
 	protected ICommandControl createCommandControl(DsfSession session, ILaunchConfiguration config) {
-		return new LldbControl(session, config, new CommandFactory());
+		return new LLDBControl(session, config, new CommandFactory());
 	}
 
 	@Override
 	protected IBreakpoints createBreakpointService(DsfSession session) {
-		return new LldbBreakpoints(session);
+		return new LLDBBreakpoints(session);
 	}
 
 	@Override
 	protected IProcesses createProcessesService(DsfSession session) {
-		return new LldbProcesses(session);
+		return new LLDBProcesses(session);
 	}
 }

@@ -31,6 +31,10 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * A LLDB-specific debugger page that only shows the options currently supported
+ * by LLDB and its integration with CDT.
+ */
 public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 
 	protected Text fLLDBCommandText;
@@ -58,17 +62,17 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent evt) {
-				handleGDBButtonSelected();
+				handleButtonSelected();
 				updateLaunchConfigurationDialog();
 			}
 
-			private void handleGDBButtonSelected() {
+			private void handleButtonSelected() {
 				FileDialog dialog = new FileDialog(getShell(), SWT.NONE);
 				dialog.setText(Messages.LLDBCDebuggerPage_browse_dialog_title);
-				String gdbCommand = fLLDBCommandText.getText().trim();
-				int lastSeparatorIndex = gdbCommand.lastIndexOf(File.separator);
+				String lldbCommand = fLLDBCommandText.getText().trim();
+				int lastSeparatorIndex = lldbCommand.lastIndexOf(File.separator);
 				if (lastSeparatorIndex != -1) {
-					dialog.setFilterPath(gdbCommand.substring(0, lastSeparatorIndex));
+					dialog.setFilterPath(lldbCommand.substring(0, lastSeparatorIndex));
 				}
 				String res = dialog.open();
 				if (res == null) {
@@ -102,7 +106,6 @@ public class LLDBCDebuggerPage extends AbstractCDebuggerPage {
 		fLLDBCommandText.setText(lldbCommand);
 	}
 
-	/** utility method to cut down on clutter */
 	private static String getStringAttr(ILaunchConfiguration config, String attributeName, String defaultValue) {
 		try {
 			return config.getAttribute(attributeName, defaultValue);

@@ -20,6 +20,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * A LLDB-specific debugger tab that allows us to present a different debugger
+ * page.
+ */
 @SuppressWarnings("restriction")
 public class LLDBLocalApplicationCDebuggerTab extends LocalApplicationCDebuggerTab {
 
@@ -41,7 +45,7 @@ public class LLDBLocalApplicationCDebuggerTab extends LocalApplicationCDebuggerT
 	}
 
 	/*
-	 * This flag it to make sure that setDefaults gets called, even if the config is initially created for another delegate (GDB) then switched to LLDB.
+	 * This flag it to make sure that setDefaults gets called, even if the configuration is initially created for another delegate (GDB) then switched to LLDB.
 	 */
 	private final static String DEFAULTS_SET = "org.eclipse.cdt.llvm.dsf.lldb.ui.internal.LLDBLocalApplicationCDebuggerTab.DEFAULTS_SET"; //$NON-NLS-1$
 

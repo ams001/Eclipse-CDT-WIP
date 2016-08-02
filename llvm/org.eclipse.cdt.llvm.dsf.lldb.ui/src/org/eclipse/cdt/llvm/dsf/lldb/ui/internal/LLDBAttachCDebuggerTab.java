@@ -8,8 +8,16 @@
 
 package org.eclipse.cdt.llvm.dsf.lldb.ui.internal;
 
+/**
+ * A LLDB-specific debugger tab for attaching.
+ */
 public class LLDBAttachCDebuggerTab extends LLDBLocalApplicationCDebuggerTab {
-    @SuppressWarnings("restriction")
+
+	/**
+	 * Constructs the {@link LLDBAttachCDebuggerTab}. This sets the tab to
+	 * attach mode.
+	 */
+	@SuppressWarnings("restriction")
 	public LLDBAttachCDebuggerTab() {
         super();
         fAttachMode = true;
