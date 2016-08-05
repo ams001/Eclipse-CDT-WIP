@@ -42,10 +42,18 @@ public class LLDBBreakpoints extends GDBBreakpoints_7_4 {
 		// there are two files of the same name in the inferior.
 		// See https://llvm.org/bugs/show_bug.cgi?id=28709
 		String location = super.formatLocation(attributes);
-		Path path = new Path(location);
+		return adjustDebuggerPath(location);
+	}
+
+	@Override
+	public String adjustDebuggerPath(String originalPath) {
+		// FIXME: See also #formatLocation for hack explanation. This one needs
+		// to be overridden for moveToLine, runToLine and stepIntoSelection
+		// (Once this hack is removed, they should be tested).
+		Path path = new Path(originalPath);
 		if (path.isAbsolute()) {
 			return path.lastSegment();
 		}
-		return location;
+		return super.adjustDebuggerPath(originalPath);
 	}
 }
